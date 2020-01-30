@@ -1,0 +1,28 @@
+{
+  "name": "web-appbuilder-widgets",
+  "version": "1.0.0",
+  "description": "Generic custom widgets for Common Sensing project",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.satapps.org:7999/ics/web-appbuilder-widgets.git"
+  },
+  "keywords": "",
+  "author": "juan.macias@sa.catapult.org.uk",
+  "license": "ISC",
+  "scripts": {},
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-es2015-modules-simple-amd": "^0.3.0",
+    "babel-preset-es2015-without-strict": "0.0.4",
+    "babel-preset-stage-0": "^6.24.1",
+    "esri-wab-build": "^1.1.0",
+    "grunt": "^1.0.4",
+    "grunt-babel": "^7.0.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-sass": "^3.1.0",
+    "grunt-sync": "^0.8.2",
+    "node-sass": "^4.13.1"
+  }
+}
