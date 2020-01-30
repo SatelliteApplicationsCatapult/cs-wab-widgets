@@ -5,17 +5,24 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-babel');
-    var appDir = 'TODO - AFTER CREATING AN APP, PLEASE PUT PATH HERE AND INSERT ENTRY IN SYNC.MAIN.FILES BELOW.';
+    var appDir = 'C:/arcgis-web-appbuilder-2.14/WebAppBuilderForArcGIS/server/apps/53';
     var stemappDir = 'C:/arcgis-web-appbuilder-2.14/WebAppBuilderForArcGIS/client/stemapp';
     grunt.initConfig({
         sync: {
             main: {
                 verbose: true,
-                files: [{
-                        cwd: 'dist/',
-                        src: '**',
-                        dest: stemappDir
-                    }]
+                files: [
+                  {
+                    cwd: 'dist/',
+                    src: '**',
+                    dest: stemappDir
+                  },
+                  {
+                    cwd: 'dist/',
+                    src: '**',
+                    dest: appDir
+                  }
+                ]
             }
         },
         babel: {
