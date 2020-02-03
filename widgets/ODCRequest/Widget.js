@@ -1,5 +1,12 @@
-define(['dojo/_base/declare', 'jimu/BaseWidget'],
-function(declare, BaseWidget) {
+define([
+    'dojo/_base/declare',
+    'jimu/BaseWidget',
+    'dojo/_base/lang',
+    "esri/layers/GraphicsLayer",
+    "esri/toolbars/draw",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/graphic"],
+function(declare, BaseWidget, lang, GraphicsLayer, Draw, SimpleFillSymbol, Graphic) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
 
@@ -9,21 +16,58 @@ function(declare, BaseWidget) {
     // this property is set by the framework when widget is loaded.
     // name: 'ODCRequest',
     // add additional properties here
+    _aoiGraphic: null,
+    _drawAoi: null,
 
     //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       console.log('ODCRequest::postCreate');
+    },
+
+    startup: function() {
+      this.inherited(arguments);
+      console.log('ODCRequest::startup');
+    },
+
+    onOpen: function(){
+      console.log('ODCRequest::onOpen');
+    },
+
+    selectAoi: function () {
+      if(!this._aoiGraphic && !this._drawAoi){
+        this._drawAoi = new Draw(this.map);
+        this._drawAoi.on("draw-end", lang.hitch(this, this._addToMap));
+        this._drawAoi.activate(Draw.RECTANGLE);
+      }
+    },
+
+    _addToMap: function (evt) {
+      this._drawAoi.deactivate();
+      this._aoiGraphic = new Graphic(evt.geometry, new SimpleFillSymbol());
+      this.map.graphics.add(this._aoiGraphic);
+      this._drawAoi.finishDrawing();
+      this._drawAoi = null;
+      console.log('geometry', evt.geometry.getExtent());
+      console.log(this._esriGeometryToWkt(evt.geometry));
+
+    },
+
+    _esriGeometryToWkt: function (geometry){
+      if(geometry.type === 'polygon'){
+        var wkt = "POLYGON((";
+        geometry.rings[0].forEach(function (point) {
+          wkt = wkt.concat(point[0].toString(), ' ', point[1].toString(), ',');
+        });
+        wkt = wkt.replace(/.$/,"))");
+        return wkt;
+      }
+    },
+
+    clearAoi: function () {
+      this.map.graphics.remove(this._aoiGraphic);
+      this._aoiGraphic = null;
     }
-
-    // startup: function() {
-    //   this.inherited(arguments);
-    //   console.log('ODCRequest::startup');
-    // },
-
-    // onOpen: function(){
-    //   console.log('ODCRequest::onOpen');
-    // },
 
     // onClose: function(){
     //   console.log('ODCRequest::onClose');
