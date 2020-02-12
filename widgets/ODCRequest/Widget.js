@@ -5,8 +5,9 @@ define([
     "esri/layers/GraphicsLayer",
     "esri/toolbars/draw",
     "esri/symbols/SimpleFillSymbol",
-    "esri/graphic"],
-function(declare, BaseWidget, lang, GraphicsLayer, Draw, SimpleFillSymbol, Graphic) {
+    "esri/graphic",
+    "esri/geometry/webMercatorUtils"],
+function(declare, BaseWidget, lang, GraphicsLayer, Draw, SimpleFillSymbol, Graphic, webMercatorUtils) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
 
@@ -48,8 +49,10 @@ function(declare, BaseWidget, lang, GraphicsLayer, Draw, SimpleFillSymbol, Graph
       this.map.graphics.add(this._aoiGraphic);
       this._drawAoi.finishDrawing();
       this._drawAoi = null;
-      console.log('geometry', evt.geometry.getExtent());
-      console.log(this._esriGeometryToWkt(evt.geometry));
+      console.log('geometry', evt.geometry);
+      var coord = webMercatorUtils.webMercatorToGeographic(evt.geometry);
+      console.log('coord', coord);
+      console.log(this._esriGeometryToWkt(coord));
 
     },
 
