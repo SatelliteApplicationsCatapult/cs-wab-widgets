@@ -5,3 +5,11 @@
   margin-top: 0;
 }
 /* add additional custom styles */
+
+.claro .dijitTabPaneWrapper {
+  border-color: white;
+}
+
+.dijitTabContainerTop-tabs {
+  border-bottom: none;
+}

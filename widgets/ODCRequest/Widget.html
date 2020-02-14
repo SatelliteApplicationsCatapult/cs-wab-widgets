@@ -1,35 +1,10 @@
 <div>
-  <form action="process.py" method="get">
-    <!-- text inputs:  dijit.form.TextBox -->
-    <strong>First Name: </strong>
-    <input type="text" name="firstName" placeholder="Your Name" id="firstName" dojoType="dijit.form.TextBox" />
-
-    <strong>Website:  </strong>
-    <input type="text" name="website" placeholder="Your Website" id="website" dojoType="dijit.form.TextBox" />
-
-    <!-- radio buttons:  dijit.form.FilteringSelect -->
-    <strong>Favorite Color: </strong>
-    <select name="color" id="color" dojoType="dijit.form.FilteringSelect">
-      <option value="">Select a Color</option>
-      <option value="Red">Red</option>
-      <option value="Green">Green</option>
-      <option value="Blue">Blue</option>
-    </select>
-
-    <!-- radio buttons:  dijit.form.CheckBox -->
-    <strong>Send Emails? </strong>
-    <input type="checkbox" id="checkbox" checked="checked" dojoType="dijit.form.CheckBox" />
-
-    <!-- radio buttons:  dijit.form.RadioButton -->
-    <strong>Email Format: </strong>
-    <input type="radio" id="radio1" name="format" checked="checked" dojoType="dijit.form.RadioButton" />
-    <label for="radio1">HTML</label>
-    <input type="radio" id="radio2" name="format" dojoType="dijit.form.RadioButton" />
-    <label for="radio2">Text</label>
-
-    <!-- submit button:  dijit.form.Button -->
-    <input type="submit" value="Submit Form" label="Submit Form" id="submitButton" dojoType="dijit.form.Button" />
-  </form>
-  <button data-dojo-type="dijit/form/Button" data-dojo-attach-event="click:selectAoi">Select AOI</button>
-  <button data-dojo-type="dijit/form/Button" data-dojo-attach-event="click:clearAoi">Clear AOI</button>
+  <div data-dojo-attach-point="tabContainer" data-dojo-type="dijit/layout/TabContainer" style="width: 100%;" doLayout="false" >
+    <div data-dojo-type="dijit/layout/ContentPane" title="Select OCD Product"  data-dojo-attach-point="selectPane"
+         data-dojo-props="selected:true">
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="Request form" data-dojo-attach-point="formPane"
+         data-dojo-props="disabled:true">
+    </div>
+  </div>
 </div>
