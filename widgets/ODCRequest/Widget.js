@@ -43,100 +43,163 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
         "args": [
           {
             "description": "Area of interest",
+            "display_name": "AOI",
             "name": "aoi",
-            "type": "wkt"
+            "type": "wkt",
+            "valid_values": []
           },
           {
             "description": "projection to generate the output in.",
+            "display_name": "projection",
             "name": "projection",
-            "type": "str"
+            "type": "str",
+            "valid_values": []
           },
           {
             "description": "Start date of the period to use for the baseline",
+            "display_name": "Baseline Start Date",
             "name": "baseline_start_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "End date of the period to use for the baseline",
+            "display_name": "Baseline End Date",
             "name": "baseline_end_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "Start date of the period to use for the analysis",
+            "display_name": "Analysis Start Date",
             "name": "analysis_start_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "End date of the period to use for the analysis",
+            "display_name": "Analysis End Date",
             "name": "analysis_end_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "Satellite to use for the baseline",
+            "display_name": "Baseline Satellite",
             "name": "platform_base",
-            "type": "str"
+            "type": "str",
+            "valid_values": [
+              "SENTINEL_2",
+              "LANDSAT_4",
+              "LANDSAT_5",
+              "LANDSAT_7",
+              "LANDSAT_8"
+            ]
           },
           {
             "description": "Satellite to use for the analysis",
+            "display_name": "Analysis Satellite",
             "name": "platform_analysis",
-            "type": "str"
+            "type": "str",
+            "valid_values": [
+              "SENTINEL_2",
+              "LANDSAT_4",
+              "LANDSAT_5",
+              "LANDSAT_7",
+              "LANDSAT_8"
+            ]
           },
           {
-            "description": "Pixel resution in meters",
+            "description": "Pixel resolution in meters",
+            "display_name": "resolution in meters",
             "name": "res",
-            "type": "int"
+            "type": "int",
+            "valid_values": [
+              0,
+              500
+            ]
           }
         ]
       },
       {
         "description": "NDVI anomaly, showing changes in NDVI between two time periods.",
-        "display_name": "NDVI Anomaly2",
+        "display_name": "NDVI Anomaly 2",
         "name": "processes.ndvi_anomaly.NDVIAnomaly2",
         "args": [
           {
             "description": "Area of interest",
+            "display_name": "AOI",
             "name": "aoi",
-            "type": "wkt"
+            "type": "wkt",
+            "valid_values": []
           },
           {
             "description": "projection to generate the output in.",
+            "display_name": "projection",
             "name": "projection",
-            "type": "str"
+            "type": "str",
+            "valid_values": []
           },
           {
             "description": "Start date of the period to use for the baseline",
+            "display_name": "Baseline Start Date",
             "name": "baseline_start_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "End date of the period to use for the baseline",
+            "display_name": "Baseline End Date",
             "name": "baseline_end_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "Start date of the period to use for the analysis",
+            "display_name": "Analysis Start Date",
             "name": "analysis_start_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "End date of the period to use for the analysis",
+            "display_name": "Analysis End Date",
             "name": "analysis_end_date",
-            "type": "date"
+            "type": "date",
+            "valid_values": []
           },
           {
             "description": "Satellite to use for the baseline",
+            "display_name": "Baseline Satellite",
             "name": "platform_base",
-            "type": "str"
+            "type": "str",
+            "valid_values": [
+              "SENTINEL_2",
+              "LANDSAT_4",
+              "LANDSAT_5",
+              "LANDSAT_7",
+              "LANDSAT_8"
+            ]
           },
           {
             "description": "Satellite to use for the analysis",
+            "display_name": "Analysis Satellite",
             "name": "platform_analysis",
-            "type": "str"
+            "type": "str",
+            "valid_values": [
+              "SENTINEL_2",
+              "LANDSAT_4",
+              "LANDSAT_5",
+              "LANDSAT_7",
+              "LANDSAT_8"
+            ]
           },
           {
-            "description": "Pixel resution in meters",
+            "description": "Pixel resolution in meters",
+            "display_name": "resolution in meters",
             "name": "res",
-            "type": "int"
+            "type": "int",
+            "valid_values": []
           }
         ]
       }
