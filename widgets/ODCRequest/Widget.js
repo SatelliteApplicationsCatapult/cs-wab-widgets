@@ -241,6 +241,7 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       // if any other product has been selected destroy the form and unselect it
       this.productCardList.forEach(function (productCard) {
         if(productCard.name !== evt.name && productCard.selected){
+          productCard.requestForm.clearAoi();
           productCard.requestForm.destroy();
           productCard.unselect();
         }
