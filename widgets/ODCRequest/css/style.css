@@ -13,3 +13,8 @@
 .dijitTabContainerTop-tabs {
   border-bottom: none;
 }
+
+.claro .dijitSelect {
+  background-color: white;
+  height: 30px;
+}
