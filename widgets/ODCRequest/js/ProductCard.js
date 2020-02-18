@@ -40,7 +40,6 @@ define(["dojo/_base/declare",
       },
 
       selectClicked: function() {
-        console.log("ProductCard.selectClicked", this);
 
         if (this.selectButton.disabled) {
           return;
@@ -53,7 +52,6 @@ define(["dojo/_base/declare",
       },
 
       addForm: function() {
-        console.log("formPane", this.formPane.domNode);
         // if (this.formPane.domNode.childElementCount !== 0){
         //   console.log(this.formPane.domNode.firstChild);
         //   this.formPane.domNode.removeChild(this.formPane.domNode.firstChild);

@@ -41,7 +41,6 @@ define(["dojo/_base/declare",
           return;
         }
         this.inherited(arguments);
-        console.log("RequestForm.startup", this);
 
         for (const arg of this.args){
             this.domNode.appendChild(document.createTextNode(arg.display_name));
