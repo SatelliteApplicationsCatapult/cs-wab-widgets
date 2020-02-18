@@ -60,7 +60,8 @@ define(["dojo/_base/declare",
         // }
         this.requestForm = new RequestForm({
           name: this.name,
-          args: this.args
+          args: this.args,
+          map: this.map
         });
 
         this.requestForm.placeAt(this.formPane);
