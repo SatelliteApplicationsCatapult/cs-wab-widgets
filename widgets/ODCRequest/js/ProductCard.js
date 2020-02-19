@@ -44,6 +44,11 @@ define(["dojo/_base/declare",
         if (this.selectButton.disabled) {
           return;
         }
+
+        this.selectButton.style.color = "#898989";
+        this.selectButton.style.cursor = "not-allowed";
+        this.itemCard.style.background = "#eeeeee08";
+
         this.selectButton.disabled = true;
         this.selected = true;
         this.emit('on-product-selected', {name: this.name});
@@ -65,6 +70,9 @@ define(["dojo/_base/declare",
         this._renderThumbnail();
         util.setNodeText(this.titleNode, this.display_name);
         util.setNodeTitle (this.titleNode, this.display_name);
+
+        util.setNodeText(this.descriptionNode, this.description);
+        util.setNodeTitle(this.descriptionNode, this.description);
       },
 
       _renderThumbnail: function() {
@@ -79,6 +87,9 @@ define(["dojo/_base/declare",
         if(this.selected){
           this.selected = false;
           this.selectButton.disabled = false;
+          this.selectButton.style.color = "";
+          this.selectButton.style.cursor = "";
+          this.itemCard.style.background = "";
         }
       }
 

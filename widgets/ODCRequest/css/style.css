@@ -18,3 +18,72 @@
   background-color: white;
   height: 30px;
 }
+
+.search-pane {
+  height: 100%;
+  width: 100%;
+  background-color: #f8f8f8;
+  position: relative;
+  margin-top: 5px;
+}
+
+.search-pane .item-card {
+  float: left;
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+  -webkit-transition: width 0.1s ease;
+  -moz-transition: width 0.1s ease;
+  -o-transition: width 0.1s ease;
+  transition: width 0.1s ease;
+}
+
+.search-pane .item-card .item-card-inner {
+  /*background: #eeeeee08;*/
+  box-shadow: 1px 1px 2px 1px #e4e4e44f;
+  /*border: 1px solid #e0e0e02e;*/
+  border-bottom-color: #cccccc;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 5px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.search-pane .item-card .thumbnail {
+  float: left;
+  margin-right: 10px;
+}
+
+.search-pane .item-card .thumbnail img {
+  width: auto;
+  height: 100%;
+  max-height: 70px;
+  object-fit: cover;
+}
+
+.search-pane .item-card div.info {
+  color: #898989;
+  font-size: 10px;
+  overflow: hidden;
+  padding-top: 3px;
+}
+
+.search-pane .item-card .action-bar {
+  text-align: right;
+
+}
+
+.item-card .action-bar a {
+  color: #24B5CC;
+  display: inline-block;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 5px;
+  margin-right: 5px;
+  text-decoration: none;
+  line-height: 20px;
+}

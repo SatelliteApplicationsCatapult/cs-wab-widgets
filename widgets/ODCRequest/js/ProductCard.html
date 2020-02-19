@@ -1,7 +1,14 @@
-<div class="product-card">
-  <div class="product-card-inner">
-    <div class="thumbnail" data-dojo-attach-point="thumbnailNode"></div>
-    <h3 class="title" data-dojo-attach-point="titleNode"></h3>
-    <button data-dojo-attach-event="click:selectClicked" data-dojo-attach-point="selectButton">Select</button>
+<div class="search-pane">
+  <div class="item-card" data-dojo-attach-point="itemCard">
+    <div class="item-card-inner">
+      <div class="thumbnail" data-dojo-attach-point="thumbnailNode"></div>
+      <h3 class="title" data-dojo-attach-point="titleNode" ></h3>
+      <div class="info" data-dojo-attach-point="descriptionNode"></div>
+      <div class="action-bar">
+        <a href="javascript:void(0)" data-dojo-attach-point="selectButton" data-dojo-attach-event="onClick: selectClicked">
+          Select
+        </a>
+      </div>
+    </div>
   </div>
 </div>
