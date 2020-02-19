@@ -26,6 +26,7 @@ define(["dojo/_base/declare",
       templateString: template,
 
       name: null,
+      display_name: null,
       args: null,
       map: null,
 
@@ -34,6 +35,28 @@ define(["dojo/_base/declare",
 
       postCreate: function() {
         this.inherited(arguments);
+        this._createInputFields();
+      },
+
+      _createInputFields: function() {
+
+        dojo.place('<h2>' + this.display_name + '</h2>', this.domNode, null);
+
+        for (const arg of this.args){
+          // Create label for given input
+          dojo.place('<label for='+ arg.name +'>' + arg.display_name+ '</label>', this.domNode, null);
+          this._createElementByType(arg).placeAt(this.domNode);
+        }
+
+        this._addAoiSelectorTools(this.domNode);
+
+        var submitButton = new Button({
+          label: 'Submit Form',
+          onClick: this.requestClicked
+        });
+
+        submitButton.placeAt(this.domNode);
+
       },
 
       startup: function() {
@@ -41,11 +64,6 @@ define(["dojo/_base/declare",
           return;
         }
         this.inherited(arguments);
-
-        for (const arg of this.args){
-            this.domNode.appendChild(document.createTextNode(arg.display_name));
-            this.domNode.appendChild(this._createElementByType(arg));
-        }
       },
 
       requestClicked: function() {
@@ -55,15 +73,24 @@ define(["dojo/_base/declare",
       _createElementByType: function(arg){
 
         if (arg.type === "date"){
-          return new DateTextBox({
-            name: arg.name
-          }).domNode;
+          var datebox = new DateTextBox({
+            name: arg.name,
+            message: arg.description,
+            id: arg.name,
+            required: true
+          });
+
+          datebox.constraints.datePattern = 'MM-dd-yyyy';
+
+          return datebox;
         }
         else if(arg.type === "str") {
           if (arg.valid_values.length === 0){
             return new Textarea({
-              name: arg.name
-            }).domNode;
+              name: arg.name,
+              id: arg.name,
+              required: true
+            });
           }
           else{
             // if valid_values list is not empty
@@ -77,8 +104,10 @@ define(["dojo/_base/declare",
 
             return new Select({
               name: arg.name,
+              id: arg.name,
+              required: true,
               options: options
-            }).domNode;
+            });
           }
         }
         else if (arg.type === "int") {
@@ -97,36 +126,37 @@ define(["dojo/_base/declare",
 
           return new NumberSpinner({
             name: arg.name,
+            id: arg.name,
+            required: true,
             value: value,
             constraints: constraints,
             smallDelta: 1
-          }).domNode;
+          });
         }
         else if (arg.type === "wkt"){
-          return this._newAoiSelector(arg);
+
+          this.wktArea = new Textarea({
+            name: arg.name,
+            id: arg.name,
+            required: true
+          });
+
+          return this.wktArea;
         }
       },
 
-      _newAoiSelector: function (arg){
+      _addAoiSelectorTools: function (domNode){
 
-        var aoiDiv = document.createElement("div");
-
-        this.wktArea = new Textarea({
-          name: arg.name
-        });
-        aoiDiv.appendChild(this.wktArea.domNode);
-
-        aoiDiv.appendChild(new Button({
+        domNode.appendChild(new Button({
           label: "Select AOI",
           onClick: lang.hitch(this, this.selectAoi)
         }).domNode);
 
-        aoiDiv.appendChild(new Button({
+        domNode.appendChild(new Button({
           label: "Clear AOI",
           onClick: lang.hitch(this, this.clearAoi)
         }).domNode);
 
-        return aoiDiv;
       },
 
       selectAoi: function () {

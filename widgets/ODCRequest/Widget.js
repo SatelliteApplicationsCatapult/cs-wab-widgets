@@ -12,10 +12,12 @@ define([
     "dijit/form/Textarea",
     "dijit/form/Button",
     "dijit/_WidgetsInTemplateMixin",
-    "./js/ProductCard"
+    "./js/ProductCard",
+    "jimu/dijit/TabContainer3"
     ],
 function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, ContentPane,
-         GraphicsLayer, DateTextBox, Textarea, Button, _WidgetsInTemplateMixin, ProductCard) {
+         GraphicsLayer, DateTextBox, Textarea, Button, _WidgetsInTemplateMixin, ProductCard,
+         TabContainer3) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
@@ -207,7 +209,31 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
     startup: function() {
       this.inherited(arguments);
       console.log('ODCRequest::startup');
+
       this.createSelectProductPane();
+
+      this.selectPaneTab = {
+        title: "Select Pane",
+        content: this.selectPane
+      };
+      this.formPaneTab = {
+        title: "Form Pane",
+        content: this.formPane
+      };
+      this.submitPaneTab = {
+        title: "Submit Pane",
+        content: this.submitPane
+      };
+
+      this.tabContainer = new TabContainer3({
+        average: true,
+        tabs:[
+          this.selectPaneTab,
+          this.formPaneTab,
+          this.submitPaneTab
+        ]
+      }, this.tabsNode);
+
     },
 
     onOpen: function(){
@@ -248,10 +274,7 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       });
 
       // Select the form tab panel automatically
-      this.tabContainer.selectChild(this.formPane);
-
-      // Unlock form tab to be selected
-      this.formPane.set('disabled', false);
+      this.tabContainer.selectTab(this.formPaneTab.title);
     }
 
     // onClose: function(){

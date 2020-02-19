@@ -29,6 +29,7 @@ define(["dojo/_base/declare",
 
       postCreate: function() {
         this.inherited(arguments);
+        this.render();
       },
 
       startup: function() {
@@ -36,7 +37,6 @@ define(["dojo/_base/declare",
           return;
         }
         this.inherited(arguments);
-        this.render();
       },
 
       selectClicked: function() {
@@ -52,16 +52,12 @@ define(["dojo/_base/declare",
       },
 
       addForm: function() {
-        // if (this.formPane.domNode.childElementCount !== 0){
-        //   console.log(this.formPane.domNode.firstChild);
-        //   this.formPane.domNode.removeChild(this.formPane.domNode.firstChild);
-        // }
         this.requestForm = new RequestForm({
           name: this.name,
+          display_name: this.display_name,
           args: this.args,
           map: this.map
         });
-
         this.requestForm.placeAt(this.formPane);
       },
 
