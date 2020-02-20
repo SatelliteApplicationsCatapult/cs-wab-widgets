@@ -15,11 +15,12 @@ define(["dojo/_base/declare",
     "esri/symbols/SimpleFillSymbol",
     "esri/graphic",
     "esri/geometry/webMercatorUtils",
-    'dojo/_base/lang'
+    'dojo/_base/lang',
+    "dojo/dom-construct"
   ],
   function(declare, array, locale, domClass, _WidgetBase, _TemplatedMixin,
            _WidgetsInTemplateMixin, template, DateTextBox, Textarea, Select, NumberSpinner,
-           Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang) {
+           Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang, domConstruct) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -40,22 +41,23 @@ define(["dojo/_base/declare",
 
       _createInputFields: function() {
 
-        dojo.place('<h2>' + this.display_name + '</h2>', this.domNode, null);
-
         for (const arg of this.args){
           // Create label for given input
-          dojo.place('<label for='+ arg.name +'>' + arg.display_name+ '</label>', this.domNode, null);
-          this._createElementByType(arg).placeAt(this.domNode);
+          var div = domConstruct.create("div", {class: 'form-input', id: arg.name});
+          domConstruct.create("label", { innerHTML: arg.display_name, for: arg.name, title:arg.description}, div);
+          domConstruct.place(this._createElementByType(arg).domNode, div);
+          domConstruct.place(div, this.odcForm.domNode);
         }
 
-        this._addAoiSelectorTools(this.domNode);
+        this._addAoiSelectorTools(this.odcForm.domNode);
 
         var submitButton = new Button({
           label: 'Submit Form',
-          onClick: this.requestClicked
+          form: 'odc-form',
+          onClick: lang.hitch(this, this.checkFormValues)
         });
 
-        submitButton.placeAt(this.domNode);
+        submitButton.placeAt(this.odcForm.domNode);
 
       },
 
@@ -66,8 +68,9 @@ define(["dojo/_base/declare",
         this.inherited(arguments);
       },
 
-      requestClicked: function() {
-        console.log("RequestForm.requestClicked", this);
+      checkFormValues: function() {
+        console.log("RequestForm.checkFormValues");
+        console.log(this.odcForm.getValues());
       },
 
       _createElementByType: function(arg){
@@ -76,11 +79,10 @@ define(["dojo/_base/declare",
           var datebox = new DateTextBox({
             name: arg.name,
             message: arg.description,
-            id: arg.name,
             required: true
           });
 
-          datebox.constraints.datePattern = 'MM-dd-yyyy';
+          datebox.constraints.datePattern = 'dd-MM-yyyy';
 
           return datebox;
         }
@@ -88,7 +90,6 @@ define(["dojo/_base/declare",
           if (arg.valid_values.length === 0){
             return new Textarea({
               name: arg.name,
-              id: arg.name,
               required: true
             });
           }
@@ -104,7 +105,6 @@ define(["dojo/_base/declare",
 
             return new Select({
               name: arg.name,
-              id: arg.name,
               required: true,
               options: options
             });
@@ -126,7 +126,6 @@ define(["dojo/_base/declare",
 
           return new NumberSpinner({
             name: arg.name,
-            id: arg.name,
             required: true,
             value: value,
             constraints: constraints,
@@ -137,7 +136,6 @@ define(["dojo/_base/declare",
 
           this.wktArea = new Textarea({
             name: arg.name,
-            id: arg.name,
             required: true
           });
 
