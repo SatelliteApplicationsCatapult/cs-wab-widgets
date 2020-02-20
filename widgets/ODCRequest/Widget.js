@@ -45,35 +45,35 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
           },
           {
             "description": "projection to generate the output in.",
-            "display_name": "projection",
+            "display_name": "Projection",
             "name": "projection",
             "type": "str",
             "valid_values": []
           },
           {
             "description": "Start date of the period to use for the baseline",
-            "display_name": "Baseline Start Date",
+            "display_name": "Baseline (Start Date)",
             "name": "baseline_start_date",
             "type": "date",
             "valid_values": []
           },
           {
             "description": "End date of the period to use for the baseline",
-            "display_name": "Baseline End Date",
+            "display_name": "Baseline (End Date)",
             "name": "baseline_end_date",
             "type": "date",
             "valid_values": []
           },
           {
             "description": "Start date of the period to use for the analysis",
-            "display_name": "Analysis Start Date",
+            "display_name": "Analysis (Start Date)",
             "name": "analysis_start_date",
             "type": "date",
             "valid_values": []
           },
           {
             "description": "End date of the period to use for the analysis",
-            "display_name": "Analysis End Date",
+            "display_name": "Analysis (End Date)",
             "name": "analysis_end_date",
             "type": "date",
             "valid_values": []
@@ -130,7 +130,7 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
           },
           {
             "description": "projection to generate the output in.",
-            "display_name": "projection",
+            "display_name": "Projection",
             "name": "projection",
             "type": "str",
             "valid_values": []
