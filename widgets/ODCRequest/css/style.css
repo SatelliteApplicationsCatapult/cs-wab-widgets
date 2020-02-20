@@ -87,3 +87,65 @@
   text-decoration: none;
   line-height: 20px;
 }
+
+/*  RequestForm Style  */
+
+.odc-form {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  padding: 1.5em 1em 4em 1em;
+}
+
+.odc-form .form-input{
+  width: 100%;
+  height: auto;
+  padding: 0 0 2em 0;
+}
+
+.odc-form .form-input label {
+  padding: 5px 10px 5px 0;
+}
+
+.odc-form .form-input > :not(label){
+  position: absolute;
+  right: 0px;
+}
+
+.odc-form .form-input textarea {
+  width: auto;
+}
+
+.claro .dijitTextBox {
+  padding: 0px !important;
+  height: 25px !important;
+  line-height: 25px !important;
+  font-size: 14px;
+}
+
+.claro .dijitButton .dijitButtonNode {
+  margin-top: 1em;
+  padding: 0.5em 0.5em;
+  background-color: white;
+  border: 1px solid #24B5CC;
+  border-radius: 0;
+  color: #24B5CC;
+}
+
+.claro .dijitButtonHover .dijitButtonNode {
+  background-color: #24B5CC;
+  color: white;
+  background-image: none;
+  -webkit-transition-duration: 0s;
+  -moz-transition-duration: 0s;
+  transition-duration: 0s;
+}
+
+.claro .dijitButtonActive .dijitButtonNode {
+  background-color: #24B5CC;
+  color: white;
+  -webkit-transition-duration: 0s;
+  -moz-transition-duration: 0s;
+  transition-duration: 0s;
+}
+
