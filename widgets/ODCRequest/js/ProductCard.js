@@ -39,6 +39,8 @@ define(["dojo/_base/declare",
         this.inherited(arguments);
       },
 
+
+
       selectClicked: function() {
 
         if (this.selectButton.disabled) {
