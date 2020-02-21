@@ -16,11 +16,13 @@ define(["dojo/_base/declare",
     "esri/graphic",
     "esri/geometry/webMercatorUtils",
     'dojo/_base/lang',
-    "dojo/dom-construct"
+    "dojo/dom-construct",
+    "./Submit"
   ],
   function(declare, array, locale, domClass, _WidgetBase, _TemplatedMixin,
            _WidgetsInTemplateMixin, template, DateTextBox, Textarea, Select, NumberSpinner,
-           Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang, domConstruct) {
+           Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang, domConstruct,
+           SubmitTemplate) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -71,7 +73,6 @@ define(["dojo/_base/declare",
 
       checkFormValues: function() {
         var formValues = this.odcForm.getValues();
-        console.log(formValues);
         var valid = true;
 
         for (let [key, value] of Object.entries(formValues)){
@@ -94,15 +95,30 @@ define(["dojo/_base/declare",
 
         if (validResponse){
 
-          // TODO: Create new submit template
-
           // Select the Submit tab panel automatically
           this.tabContainer.selectTab('Submit Pane');
+
+          this.submitTemplate = new SubmitTemplate({
+            display_name: this.display_name,
+            estimatedTime: 0
+          });
+
+          this.submitTemplate.placeAt(this.tabContainer.tabs[2].content);
 
           // Unlock Submit Pane tab selection after selecting product
           this.tabContainer.tabItems
             .find(tab => tab.title === 'Submit Pane')
             .style.pointerEvents = "";
+
+          // Block tab selection for Form and Select Pane
+          this.tabContainer.tabItems
+            .find(tab => tab.title === 'Form Pane')
+            .style.pointerEvents = 'none';
+
+          this.tabContainer.tabItems
+            .find(tab => tab.title === 'Select Pane')
+            .style.pointerEvents = 'none';
+
         }
 
       },

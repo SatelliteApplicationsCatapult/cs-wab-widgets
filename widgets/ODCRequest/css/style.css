@@ -149,3 +149,16 @@
   transition-duration: 0s;
 }
 
+.submitPane {
+  padding: 4em;
+}
+
+.claro .dijitProgressBarTile {
+  background-color: #24B5CC;
+  color: white;
+  background-image: none;
+}
+
+.claro .dijitProgressBarEmpty {
+  border: 1px solid #24B5CC !important;
+}
