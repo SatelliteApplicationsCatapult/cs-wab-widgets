@@ -30,6 +30,7 @@ define(["dojo/_base/declare",
       display_name: null,
       args: null,
       map: null,
+      tabContainer: null,
 
       _aoiGraphic: null,
       _drawAoi: null,
@@ -69,8 +70,41 @@ define(["dojo/_base/declare",
       },
 
       checkFormValues: function() {
-        console.log("RequestForm.checkFormValues");
-        console.log(this.odcForm.getValues());
+        var formValues = this.odcForm.getValues();
+        console.log(formValues);
+        var valid = true;
+
+        for (let [key, value] of Object.entries(formValues)){
+          if(value === "" || value === null){
+            valid = false;
+          }
+        }
+
+        // TODO: Validate values for AOI and dates
+
+        if (valid){
+          this.sendValues(formValues);
+        }
+      },
+
+      sendValues: function(values){
+
+        //TODO: Send values to ODC backend API
+        var validResponse = true; // emulates valid response
+
+        if (validResponse){
+
+          // TODO: Create new submit template
+
+          // Select the Submit tab panel automatically
+          this.tabContainer.selectTab('Submit Pane');
+
+          // Unlock Submit Pane tab selection after selecting product
+          this.tabContainer.tabItems
+            .find(tab => tab.title === 'Submit Pane')
+            .style.pointerEvents = "";
+        }
+
       },
 
       _createElementByType: function(arg){

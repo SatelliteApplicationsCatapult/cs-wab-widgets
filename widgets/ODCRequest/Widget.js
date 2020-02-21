@@ -210,8 +210,6 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       this.inherited(arguments);
       console.log('ODCRequest::startup');
 
-      this.createSelectProductPane();
-
       this.selectPaneTab = {
         title: "Select Pane",
         content: this.selectPane
@@ -242,6 +240,8 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       this.tabContainer.tabItems
         .find(tab => tab.title === 'Submit Pane')
         .style.pointerEvents = 'none';
+
+      this.createSelectProductPane();
     },
 
     onOpen: function(){
@@ -253,14 +253,14 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       // TODO: Here it will call the backend API to fetch the productList JSON
 
       for (const product of this.productList){
-
         var productCard = new ProductCard({
           name: product.name,
           display_name: product.display_name,
           description: product.description,
           args: product.args,
           formPane: this.formPane,
-          map: this.map
+          map: this.map,
+          tabContainer: this.tabContainer
         });
 
         productCard.placeAt(this.selectPane);

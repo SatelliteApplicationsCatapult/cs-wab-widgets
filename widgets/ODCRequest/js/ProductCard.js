@@ -22,6 +22,7 @@ define(["dojo/_base/declare",
       description: null,
       args: null,
       formPane: null,
+      tabContainer: null,
 
       selected: false,
 
@@ -63,7 +64,8 @@ define(["dojo/_base/declare",
           name: this.name,
           display_name: this.display_name,
           args: this.args,
-          map: this.map
+          map: this.map,
+          tabContainer: this.tabContainer
         });
         this.requestForm.placeAt(this.formPane);
       },
