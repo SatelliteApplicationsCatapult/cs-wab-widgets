@@ -234,26 +234,14 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
         ]
       }, this.tabsNode);
 
-      console.log("this.tabContainer", this.tabContainer.tabItems);
-
+      // Block tab selection for Form and Submit Pane
       this.tabContainer.tabItems
         .find(tab => tab.title === 'Form Pane')
         .style.pointerEvents = 'none';
 
       this.tabContainer.tabItems
-        .find(tab => tab.title === 'Form Pane')
-        .style.cursor = "not-allowed";
-
-
-      this.tabContainer.tabItems
         .find(tab => tab.title === 'Submit Pane')
         .style.pointerEvents = 'none';
-
-      this.tabContainer.tabItems
-        .find(tab => tab.title === 'Submit Pane')
-        .style.cursor = "not-allowed";
-
-
     },
 
     onOpen: function(){
@@ -296,13 +284,10 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       // Select the form tab panel automatically
       this.tabContainer.selectTab(this.formPaneTab.title);
 
+      // Unlock Form Pane tab selection after selecting product
       this.tabContainer.tabItems
         .find(tab => tab.title === 'Form Pane')
         .style.pointerEvents = "";
-
-      this.tabContainer.tabItems
-        .find(tab => tab.title === 'Form Pane')
-        .style.cursor = "";
     }
 
     // onClose: function(){
