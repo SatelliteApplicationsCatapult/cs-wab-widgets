@@ -30,176 +30,6 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
 
     productCardList: [],
 
-    productList: [
-      {
-        "description": "NDVI anomaly, showing changes in NDVI between two time periods.",
-        "display_name": "NDVI Anomaly",
-        "name": "processes.ndvi_anomaly.NDVIAnomaly",
-        "args": [
-          {
-            "description": "Area of interest",
-            "display_name": "AOI",
-            "name": "aoi",
-            "type": "wkt",
-            "valid_values": []
-          },
-          {
-            "description": "projection to generate the output in.",
-            "display_name": "Projection",
-            "name": "projection",
-            "type": "str",
-            "valid_values": []
-          },
-          {
-            "description": "Start date of the period to use for the baseline",
-            "display_name": "Baseline (Start Date)",
-            "name": "baseline_start_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "End date of the period to use for the baseline",
-            "display_name": "Baseline (End Date)",
-            "name": "baseline_end_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "Start date of the period to use for the analysis",
-            "display_name": "Analysis (Start Date)",
-            "name": "analysis_start_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "End date of the period to use for the analysis",
-            "display_name": "Analysis (End Date)",
-            "name": "analysis_end_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "Satellite to use for the baseline",
-            "display_name": "Baseline Satellite",
-            "name": "platform_base",
-            "type": "str",
-            "valid_values": [
-              "SENTINEL_2",
-              "LANDSAT_4",
-              "LANDSAT_5",
-              "LANDSAT_7",
-              "LANDSAT_8"
-            ]
-          },
-          {
-            "description": "Satellite to use for the analysis",
-            "display_name": "Analysis Satellite",
-            "name": "platform_analysis",
-            "type": "str",
-            "valid_values": [
-              "SENTINEL_2",
-              "LANDSAT_4",
-              "LANDSAT_5",
-              "LANDSAT_7",
-              "LANDSAT_8"
-            ]
-          },
-          {
-            "description": "Pixel resolution in meters",
-            "display_name": "resolution in meters",
-            "name": "res",
-            "type": "int",
-            "valid_values": [
-              0,
-              500
-            ]
-          }
-        ]
-      },
-      {
-        "description": "NDVI anomaly, showing changes in NDVI between two time periods.",
-        "display_name": "NDVI Anomaly 2",
-        "name": "processes.ndvi_anomaly.NDVIAnomaly2",
-        "args": [
-          {
-            "description": "Area of interest",
-            "display_name": "AOI",
-            "name": "aoi",
-            "type": "wkt",
-            "valid_values": []
-          },
-          {
-            "description": "projection to generate the output in.",
-            "display_name": "Projection",
-            "name": "projection",
-            "type": "str",
-            "valid_values": []
-          },
-          {
-            "description": "Start date of the period to use for the baseline",
-            "display_name": "Baseline Start Date",
-            "name": "baseline_start_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "End date of the period to use for the baseline",
-            "display_name": "Baseline End Date",
-            "name": "baseline_end_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "Start date of the period to use for the analysis",
-            "display_name": "Analysis Start Date",
-            "name": "analysis_start_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "End date of the period to use for the analysis",
-            "display_name": "Analysis End Date",
-            "name": "analysis_end_date",
-            "type": "date",
-            "valid_values": []
-          },
-          {
-            "description": "Satellite to use for the baseline",
-            "display_name": "Baseline Satellite",
-            "name": "platform_base",
-            "type": "str",
-            "valid_values": [
-              "SENTINEL_2",
-              "LANDSAT_4",
-              "LANDSAT_5",
-              "LANDSAT_7",
-              "LANDSAT_8"
-            ]
-          },
-          {
-            "description": "Satellite to use for the analysis",
-            "display_name": "Analysis Satellite",
-            "name": "platform_analysis",
-            "type": "str",
-            "valid_values": [
-              "SENTINEL_2",
-              "LANDSAT_4",
-              "LANDSAT_5",
-              "LANDSAT_7",
-              "LANDSAT_8"
-            ]
-          },
-          {
-            "description": "Pixel resolution in meters",
-            "display_name": "resolution in meters",
-            "name": "res",
-            "type": "int",
-            "valid_values": []
-          }
-        ]
-      }
-    ],
-
     //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
@@ -250,24 +80,60 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
 
     createSelectProductPane: function () {
 
-      // TODO: Here it will call the backend API to fetch the productList JSON
+      var token_url = new URL(this.config.cubequeryUrl + '/token');
 
-      for (const product of this.productList){
-        var productCard = new ProductCard({
-          name: product.name,
-          display_name: product.display_name,
-          description: product.description,
-          args: product.args,
-          formPane: this.formPane,
-          map: this.map,
-          tabContainer: this.tabContainer
-        });
+      fetch(token_url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name:this.config.cubequeryName,
+          pass:this.config.cubequeryPass
+        })
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
 
-        productCard.placeAt(this.selectPane);
-        productCard.on('on-product-selected', lang.hitch(this, this._productSelectedOnChanged));
+        var describe_url = new URL(this.config.cubequeryUrl + '/describe');
+        describe_url.searchParams.append('APP_KEY', data.token);
 
-        this.productCardList.push(productCard);
-      }
+        fetch(describe_url, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+
+          for (const product of data){
+            var productCard = new ProductCard({
+              name: product.name,
+              display_name: product.display_name,
+              description: product.description,
+              args: product.args,
+              formPane: this.formPane,
+              map: this.map,
+              tabContainer: this.tabContainer
+            });
+
+            productCard.placeAt(this.selectPane);
+            productCard.on('on-product-selected', lang.hitch(this, this._productSelectedOnChanged));
+
+            this.productCardList.push(productCard);
+          }
+        })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     },
 
     _productSelectedOnChanged : function(evt) {

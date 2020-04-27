@@ -1,3 +1,5 @@
 {
-  "serviceUrl": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer"
+  "cubequeryUrl": "http://localhost:5000",
+  "cubequeryName": "basic",
+  "cubequeryPass": "secretpassword"
 }
