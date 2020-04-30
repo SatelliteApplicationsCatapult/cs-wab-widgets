@@ -7,7 +7,6 @@ define(["dojo/_base/declare",
     "dijit/_WidgetsInTemplateMixin",
     "dojo/text!./RequestForm.html",
     "dijit/form/DateTextBox",
-    "dijit/form/Textarea",
     "dijit/form/Select",
     "dijit/form/NumberSpinner",
     "dijit/form/Button",
@@ -17,12 +16,13 @@ define(["dojo/_base/declare",
     "esri/geometry/webMercatorUtils",
     'dojo/_base/lang',
     "dojo/dom-construct",
-    "./Submit"
+    "./Submit",
+    "dijit/form/ValidationTextBox"
   ],
   function(declare, array, locale, domClass, _WidgetBase, _TemplatedMixin,
-           _WidgetsInTemplateMixin, template, DateTextBox, Textarea, Select, NumberSpinner,
+           _WidgetsInTemplateMixin, template, DateTextBox, Select, NumberSpinner,
            Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang, domConstruct,
-           SubmitTemplate) {
+           SubmitTemplate, ValidationTextBox) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -72,19 +72,8 @@ define(["dojo/_base/declare",
       },
 
       checkFormValues: function() {
-        var formValues = this.odcForm.getValues();
-        var valid = true;
-
-        for (let [key, value] of Object.entries(formValues)){
-          if(value === "" || value === null){
-            valid = false;
-          }
-        }
-
-        // TODO: Validate values for AOI and dates
-
-        if (valid){
-          this.sendValues(formValues);
+        if (this.odcForm.validate()){
+          this.sendValues(dojo.formToJson(this.odcForm.id));
         }
       },
 
@@ -138,7 +127,7 @@ define(["dojo/_base/declare",
         }
         else if(arg.type === "str") {
           if (arg.valid_values.length === 0){
-            return new Textarea({
+            return new ValidationTextBox({
               name: arg.name,
               required: true
             });
@@ -184,9 +173,11 @@ define(["dojo/_base/declare",
         }
         else if (arg.type === "wkt"){
 
-          this.wktArea = new Textarea({
+          this.wktArea = new ValidationTextBox({
             name: arg.name,
-            required: true
+            required: true,
+            regExp: "POLYGON\\(\\(((-?\\d+\\.\\d+ -?\\d+\\.\\d+),?)+\\)\\)+",
+            invalidMessage:'Introduce a valid WKT string or use Select AOI tool'
           });
 
           return this.wktArea;
