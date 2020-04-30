@@ -115,14 +115,23 @@ define(["dojo/_base/declare",
       _createElementByType: function(arg){
 
         if (arg.type === "date"){
+          const datePattern = 'dd-MM-yyyy';
           var datebox = new DateTextBox({
             name: arg.name,
             message: arg.description,
-            required: true
+            required: true,
+            constraints:{
+              datePattern: datePattern
+            },
+            serialize: function (value, options){
+              return locale.format(value,
+                {
+                  selector: 'date',
+                  datePattern: datePattern
+                }
+              );
+            }
           });
-
-          datebox.constraints.datePattern = 'dd-MM-yyyy';
-
           return datebox;
         }
         else if(arg.type === "str") {
