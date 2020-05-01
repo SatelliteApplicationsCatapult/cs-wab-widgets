@@ -153,6 +153,26 @@
   padding: 4em;
 }
 
+.spaneError {
+  padding: 2em;
+  text-align: center;
+}
+
+.paneError a {
+  color: #24B5CC;
+  display: inline-block;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 5px;
+  margin-right: 5px;
+  text-decoration: none;
+  line-height: 20px;
+}
+
+.paneError img{
+  width: 20%;
+}
+
 .claro .dijitProgressBarTile {
   background-color: #24B5CC;
   color: white;
