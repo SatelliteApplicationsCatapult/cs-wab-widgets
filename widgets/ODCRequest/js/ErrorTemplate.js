@@ -5,7 +5,7 @@ define(["dojo/_base/declare",
     "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
-    "dojo/text!./SubmitError.html",
+    "dojo/text!./ErrorTemplate.html",
     "dijit/ProgressBar",
     "dojo/dom-construct"
   ],
