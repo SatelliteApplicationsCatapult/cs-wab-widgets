@@ -98,8 +98,9 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       })
       .then((data) => {
 
+        this.apiToken = data.token;
         var describe_url = new URL(this.config.cubequeryUrl + '/describe');
-        describe_url.searchParams.append('APP_KEY', data.token);
+        describe_url.searchParams.append('APP_KEY', this.apiToken);
 
         fetch(describe_url, {
           method: 'GET',
@@ -121,7 +122,9 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
               args: product.args,
               formPane: this.formPane,
               map: this.map,
-              tabContainer: this.tabContainer
+              tabContainer: this.tabContainer,
+              config: this.config,
+              apiToken: this.apiToken
             });
 
             productCard.placeAt(this.selectPane);

@@ -65,7 +65,9 @@ define(["dojo/_base/declare",
           display_name: this.display_name,
           args: this.args,
           map: this.map,
-          tabContainer: this.tabContainer
+          tabContainer: this.tabContainer,
+          config: this.config,
+          apiToken: this.apiToken
         });
         this.requestForm.placeAt(this.formPane);
       },

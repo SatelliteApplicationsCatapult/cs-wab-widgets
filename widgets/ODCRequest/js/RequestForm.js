@@ -17,12 +17,13 @@ define(["dojo/_base/declare",
     'dojo/_base/lang',
     "dojo/dom-construct",
     "./Submit",
-    "dijit/form/ValidationTextBox"
+    "dijit/form/ValidationTextBox",
+    "./ErrorTemplate"
   ],
   function(declare, array, locale, domClass, _WidgetBase, _TemplatedMixin,
            _WidgetsInTemplateMixin, template, DateTextBox, Select, NumberSpinner,
            Button, Draw, SimpleFillSymbol, Graphic, webMercatorUtils, lang, domConstruct,
-           SubmitTemplate, ValidationTextBox) {
+           SubmitTemplate, ValidationTextBox, ErrorTemplate) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -79,37 +80,90 @@ define(["dojo/_base/declare",
 
       sendValues: function(values){
 
-        //TODO: Send values to ODC backend API
-        var validResponse = true; // emulates valid response
+        var task_url = new URL(this.config.cubequeryUrl + '/task');
+        task_url.searchParams.append('APP_KEY', this.apiToken);
 
-        if (validResponse){
+        fetch(task_url, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            task: this.name,
+            args: values
+          })
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          this._createSuccessfulMessage(data);
+        })
+        .catch((error) => {
+          this._createErrorMessage(error);
+        });
 
-          // Select the Submit tab panel automatically
-          this.tabContainer.selectTab('Submit Pane');
+      },
 
-          this.submitTemplate = new SubmitTemplate({
-            display_name: this.display_name,
-            estimatedTime: 0
-          });
+      _createSuccessfulMessage: function (message){
+        // Select the Submit tab panel automatically
+        this.tabContainer.selectTab('Submit Pane');
 
-          this.submitTemplate.placeAt(this.tabContainer.tabs[2].content);
+        this.submitTemplate = new SubmitTemplate({
+          display_name: this.display_name,
+          estimatedTime: 0,
+          message: message
+        });
 
-          // Unlock Submit Pane tab selection after selecting product
-          this.tabContainer.tabItems
-            .find(tab => tab.title === 'Submit Pane')
-            .style.pointerEvents = "";
+        this.submitTemplate.placeAt(this.tabContainer.tabs[2].content);
 
-          // Block tab selection for Form and Select Pane
-          this.tabContainer.tabItems
-            .find(tab => tab.title === 'Form Pane')
-            .style.pointerEvents = 'none';
+        // Unlock Submit Pane tab selection after selecting product
+        this.tabContainer.tabItems
+        .find(tab => tab.title === 'Submit Pane')
+        .style.pointerEvents = "";
 
-          this.tabContainer.tabItems
-            .find(tab => tab.title === 'Select Pane')
-            .style.pointerEvents = 'none';
+        // Block tab selection for Form and Select Pane
+        this.tabContainer.tabItems
+        .find(tab => tab.title === 'Form Pane')
+        .style.pointerEvents = 'none';
 
+        this.tabContainer.tabItems
+        .find(tab => tab.title === 'Select Pane')
+        .style.pointerEvents = 'none';
+      },
+
+      _createErrorMessage: function (message){
+        // Select the Submit tab panel automatically
+        this.tabContainer.selectTab('Submit Pane');
+
+        this.errorTemplate = new ErrorTemplate({
+          errorMessage: message,
+          tabContainer: this.tabContainer,
+          actionElement: domConstruct.create(
+            "a",
+            {
+              innerHTML: 'Return',
+              href: "javascript:void(0)",
+              onclick: () => {
+                this.tabContainer.selectTab('Form Pane');
+              }
+            }
+          )
+        });
+
+        // Remove any previous content within the submit panel
+        var child = this.tabContainer.tabs[2].content.firstChild;
+        if(child){
+          this.tabContainer.tabs[2].content.removeChild(child);
         }
 
+        this.errorTemplate.placeAt(this.tabContainer.tabs[2].content);
+
+        // Unlock Submit Pane tab selection after selecting product
+        this.tabContainer.tabItems
+        .find(tab => tab.title === 'Submit Pane')
+        .style.pointerEvents = "";
       },
 
       _createElementByType: function(arg){
