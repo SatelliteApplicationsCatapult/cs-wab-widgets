@@ -13,11 +13,13 @@ define([
     "dijit/form/Button",
     "dijit/_WidgetsInTemplateMixin",
     "./js/ProductCard",
-    "jimu/dijit/TabContainer3"
+    "jimu/dijit/TabContainer3",
+    "./js/ErrorTemplate",
+    "dojo/dom-construct"
     ],
 function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, ContentPane,
          GraphicsLayer, DateTextBox, Textarea, Button, _WidgetsInTemplateMixin, ProductCard,
-         TabContainer3) {
+         TabContainer3, ErrorTemplate, domConstruct) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
@@ -135,7 +137,12 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
         })
       })
       .catch((error) => {
-        console.error('Error:', error);
+        this.errorTemplate = new ErrorTemplate({
+          errorMessage: error,
+          tabContainer: this.tabContainer,
+        });
+
+        this.errorTemplate.placeAt(this.selectPane);
       });
     },
 
