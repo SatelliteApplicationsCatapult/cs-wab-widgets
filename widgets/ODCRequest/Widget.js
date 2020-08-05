@@ -73,6 +73,20 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
         .find(tab => tab.title === 'Submit Pane')
         .style.pointerEvents = 'none';
 
+      var newRequestButton = new Button({
+        label: '↩ Request another product',
+        onClick: lang.hitch(this, this.newRequestSubmit)
+      });
+
+      newRequestButton.placeAt(this.submitPane);
+
+      var modifyRequestButton = new Button({
+        label: 'Modify request',
+        onClick: lang.hitch(this, this.modifyRequestSubmit)
+      });
+
+      modifyRequestButton.placeAt(this.submitPane);
+
       this.createSelectProductPane();
     },
 
@@ -164,6 +178,45 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       this.tabContainer.tabItems
         .find(tab => tab.title === 'Form Pane')
         .style.pointerEvents = "";
+    },
+
+    newRequestSubmit: function(evt) {
+      // destroy the form and unselect it
+      this.productCardList.forEach(function (productCard) {
+        if(productCard.selected){
+          productCard.requestForm.clearAoi();
+          productCard.requestForm.destroy();
+          productCard.unselect();
+        }
+      });
+
+      // Select the Select Pane tab automatically
+      this.tabContainer.selectTab(this.selectPaneTab.title);
+
+      // Lock Submit Pane tab
+      this.tabContainer.tabItems
+        .find(tab => tab.title === 'Submit Pane')
+        .style.pointerEvents = 'none';
+    },
+
+    modifyRequestSubmit: function(evt) {
+      // Select the Form Pane tab automatically
+      this.tabContainer.selectTab('Form Pane');
+
+      // unlock Select Pane tab
+      this.tabContainer.tabItems
+        .find(tab => tab.title === 'Select Pane')
+        .style.pointerEvents = '';
+
+      // unlock Form Pane tab
+      this.tabContainer.tabItems
+      .find(tab => tab.title === 'Form Pane')
+      .style.pointerEvents = '';
+
+      // Lock Submit Pane tab
+      this.tabContainer.tabItems
+        .find(tab => tab.title === 'Submit Pane')
+        .style.pointerEvents = 'none';
     }
 
     // onClose: function(){
