@@ -95,7 +95,7 @@ define(["dojo/_base/declare",
           })
         })
         .then((response) => {
-          return response.json();
+          return response.text();
         })
         .then((data) => {
           this._createSuccessfulMessage(data);
