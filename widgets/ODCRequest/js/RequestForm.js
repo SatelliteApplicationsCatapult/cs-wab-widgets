@@ -91,7 +91,7 @@ define(["dojo/_base/declare",
           },
           body: JSON.stringify({
             task: this.name,
-            args: values
+            args: JSON.parse(values)
           })
         })
         .then((response) => {
