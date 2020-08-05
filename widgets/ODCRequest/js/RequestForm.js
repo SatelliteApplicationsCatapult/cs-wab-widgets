@@ -239,7 +239,7 @@ define(["dojo/_base/declare",
           this.wktArea = new ValidationTextBox({
             name: arg.name,
             required: true,
-            regExp: "POLYGON\\(\\(((-?\\d+\\.\\d+ -?\\d+\\.\\d+),?)+\\)\\)+",
+            regExp: "POLYGON\\s*\\(\\(((-?\\d+\\.\\d+ -?\\d+\\.\\d+),?\\s*)+\\)\\)+",
             invalidMessage:'Introduce a valid WKT string or use Select AOI tool'
           });
 
