@@ -80,13 +80,6 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
 
       newRequestButton.placeAt(this.submitPane);
 
-      var modifyRequestButton = new Button({
-        label: 'Modify request',
-        onClick: lang.hitch(this, this.modifyRequestSubmit)
-      });
-
-      modifyRequestButton.placeAt(this.submitPane);
-
       this.createSelectProductPane();
     },
 
@@ -193,10 +186,15 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       // Select the Select Pane tab automatically
       this.tabContainer.selectTab(this.selectPaneTab.title);
 
-      // Lock Submit Pane tab
+      // Lock Form Pane tab
       this.tabContainer.tabItems
-        .find(tab => tab.title === 'Submit Pane')
+        .find(tab => tab.title === 'Form Pane')
         .style.pointerEvents = 'none';
+
+      // Unlock Select Pane tab
+      this.tabContainer.tabItems
+      .find(tab => tab.title === 'Select Pane')
+      .style.pointerEvents = '';
     },
 
     modifyRequestSubmit: function(evt) {

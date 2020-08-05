@@ -109,11 +109,7 @@ define(["dojo/_base/declare",
         .find(tab => tab.title === 'Submit Pane')
         .style.pointerEvents = "";
 
-        // Block tab selection for Form and Select Pane
-        this.tabContainer.tabItems
-        .find(tab => tab.title === 'Form Pane')
-        .style.pointerEvents = 'none';
-
+        // Block tab selection for Select Pane
         this.tabContainer.tabItems
         .find(tab => tab.title === 'Select Pane')
         .style.pointerEvents = 'none';
