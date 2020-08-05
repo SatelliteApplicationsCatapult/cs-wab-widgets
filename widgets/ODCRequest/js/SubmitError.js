@@ -15,15 +15,14 @@ define(["dojo/_base/declare",
 
       templateString: template,
 
+      errorMessage: null,
       display_name: null,
-      estimatedTime: null,
-      message: null,
 
       postCreate: function() {
         this.inherited(arguments);
 
         domConstruct.create("p", {
-          innerHTML: `✔ Your ${this.display_name} product is being processed. (${this.message})`,
+          innerHTML: `❌ Your ${this.display_name} product could not be processed. Reason: ${this.errorMessage}`,
           style: "padding: 0.5em"},
           this.domNode);
 
