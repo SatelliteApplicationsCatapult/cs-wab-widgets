@@ -103,6 +103,7 @@ define(["dojo/_base/declare",
       },
 
       startup: function() {
+          
         if (this._started) {
           return;
         }
@@ -276,7 +277,6 @@ define(["dojo/_base/declare",
                 }
               }
             }
-            // Need to change from hardcoding in platform and platform base to read from the input_conditions.json and get list of all variables that need changing
             select_dom = new Select({
               name: arg.name,
               required: true,
@@ -447,9 +447,11 @@ define(["dojo/_base/declare",
                   }
                   date_node.attr("constraints", constraints)
                   
+                  /*
                   if (date_node.value != null) {
                     date_node.attr("value", values[0])
                   }
+                  */
                   
                 }
               }
@@ -589,10 +591,8 @@ define(["dojo/_base/declare",
                     constraints.max = ''
                   }
                   date_nodes[i].attr("constraints", constraints)
-                  date_nodes[i].attr("value", min_value)
-
+                  //date_nodes[i].attr("value", min_value)
                 }
-
               }
             }
           })
