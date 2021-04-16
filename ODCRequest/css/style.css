@@ -19,6 +19,14 @@
   height: 30px;
 }
 
+@-moz-document url-prefix() {
+  .claro .dijitSelect {
+    background-color: white;
+    height: 30px;
+    margin-top: -1.5em;
+  }
+}
+
 .search-pane {
   height: 100%;
   width: 100%;
@@ -95,6 +103,7 @@
   flex-flow: row wrap;
   align-items: center;
   padding: 1.5em 1em 4em 1em;
+  justify-content: center;
 }
 
 .odc-form .form-input{
@@ -115,6 +124,15 @@
 .odc-form .form-input textarea {
   width: auto;
 }
+
+.odc-form .multi {
+    height:75px;
+}
+
+.claro .dijitDialogTitleBar {
+    background-color: #3f7e448c;
+}
+
 
 .claro .dijitTextBox {
   padding: 0px !important;
@@ -147,6 +165,18 @@
   -webkit-transition-duration: 0s;
   -moz-transition-duration: 0s;
   transition-duration: 0s;
+}
+
+.dijitMultiSelect {
+    font-family: inherit;
+}
+
+.dijitInputInner {
+    font-family: inherit;
+}
+
+.dijitButton {
+  padding-bottom: 1.5em;
 }
 
 .submitPane {
