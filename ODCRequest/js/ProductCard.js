@@ -85,7 +85,11 @@ define(["dojo/_base/declare",
         var nd = this.thumbnailNode;
         nd.innerHTML = "";
         var thumbnail = document.createElement("IMG");
-        thumbnail.src = "widgets/ODCRequest/images/placeholder_120x80.png";
+        if (this.thumbnail) {
+          thumbnail.src = this.thumbnail
+        } else {
+          thumbnail.src = "widgets/ODCRequest/images/placeholder_120x80.png";
+        }
         nd.appendChild(thumbnail);
       },
 
