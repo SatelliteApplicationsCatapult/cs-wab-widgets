@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
-define(["dojo/_base/array", "dojo/dom-attr"],
-  function(array, domAttr) {
+define(["dojo/_base/array"],
+  function(array) {
 
     return {
 
