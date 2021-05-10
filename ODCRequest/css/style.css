@@ -1,3 +1,7 @@
+.jimu-panel {
+    width:515px;
+}
+
 .odc-request h3 {
   font-size: 1.2em;
 }
@@ -78,11 +82,19 @@
   font-size: 10px;
   overflow: hidden;
   padding-top: 3px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
 .search-pane .item-card .action-bar {
   text-align: right;
 
+}
+
+.search-pane .item-card .item-card-inner:hover {
+    background-color: #ebf7eb;
 }
 
 .item-card .action-bar a {
@@ -97,6 +109,11 @@
 }
 
 /*  RequestForm Style  */
+
+label.form_label {
+    display: inline-block;
+    width: 140px;
+}
 
 .odc-form {
   display: flex;
@@ -211,4 +228,10 @@
 
 .claro .dijitProgressBarEmpty {
   border: 1px solid #24B5CC !important;
+}
+
+.claro .dijitTooltipContainer.dijitTooltipContents {
+    padding-right: 20px;
+    max-width: 50%;
+    text-align: center;
 }

@@ -71,7 +71,8 @@ define(["dojo/_base/declare",
             domConstruct.create("label", {
               innerHTML: arg.display_name,
               for: arg.name,
-              title: arg.description
+              title: arg.description,
+              class:'form_label',
             }, div);
             domConstruct.place(this._createElementByType(arg).domNode, div);
             domConstruct.place(div, this.odcForm.domNode);
@@ -331,7 +332,6 @@ define(["dojo/_base/declare",
               if (this._validatePolygon(value)) {
                 this._drawInputPolygon(value)
               }
-
             })
           });
 
@@ -714,7 +714,10 @@ define(["dojo/_base/declare",
       clearAoi: function() {
         this.map.graphics.clear();
         this._aoiGraphic = null;
-        this.wktArea.set('value', "");
+        if (this.wktArea) {
+          this.wktArea.set('value', "");
+        }
+        
       }
 
     });
