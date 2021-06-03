@@ -29,6 +29,17 @@ define(["dojo/_base/array"],
         nd.title = "";
         if (text) {
           nd.setAttribute("title", text);
+
+          let link = document.createElement('a')
+          link.href = 'https://arcgis01.satapps.org/portal/apps/sites/?fromEdit=true#/data/pages/data-cube'
+          link.style= 'vertical-align: middle;'
+          link.target = '_blank'
+
+          let img = document.createElement('img');
+          img.src = "widgets/ODCRequest/images/information.png"
+          img.style = "width: 35px; height: 12px; object-fit: contain; opacity:0.6;"
+          link.appendChild(img)
+          nd.appendChild(link);
         }
       },
 
@@ -38,7 +49,5 @@ define(["dojo/_base/array"],
           nd.innerHTML = html;
         }
       }
-
     };
-
   });

@@ -88,7 +88,8 @@ define(["dojo/_base/declare",
       _setTooltip: function() {
         var e = new Tooltip({
             connectId: [this.descriptionNode],
-            label: this.description
+            label: this.description,
+            position: ["above"]
         });
       },
 
@@ -97,6 +98,7 @@ define(["dojo/_base/declare",
         nd.innerHTML = "";
         var thumbnail = document.createElement("IMG");
         if (this.thumbnail) {
+          thumbnail.classList.add('cardThumbnail')
           thumbnail.src = this.thumbnail
         } else {
           thumbnail.src = "widgets/ODCRequest/images/placeholder_120x80.png";

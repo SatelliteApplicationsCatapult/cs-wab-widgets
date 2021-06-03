@@ -146,6 +146,13 @@ label.form_label {
     height:75px;
 }
 
+.form_title {
+    width:100%;
+    text-align:center;
+    font-weight: 700;
+    font-size: 1.3em;
+}
+
 .claro .dijitDialogTitleBar {
     background-color: #3f7e448c;
 }
@@ -220,6 +227,11 @@ label.form_label {
   width: 20%;
 }
 
+.successMessage {
+    color:#4b824a;
+
+}
+
 .claro .dijitProgressBarTile {
   background-color: #24B5CC;
   color: white;
@@ -232,6 +244,5 @@ label.form_label {
 
 .claro .dijitTooltipContainer.dijitTooltipContents {
     padding-right: 20px;
-    max-width: 50%;
     text-align: center;
 }
