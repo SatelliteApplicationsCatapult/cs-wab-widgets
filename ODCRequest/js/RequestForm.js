@@ -288,7 +288,7 @@ define(["dojo/_base/declare",
                 width: '17.3em'
               },
               onChange: function (value) {
-                if (arg.name == 'platform' || arg.name == 'platform_base') {
+                if (arg.name == 'platform' || arg.name == 'baseline_platform') {
                   set_int_boundaries('platform', value, process_name)
                   set_date_boundaries('platform', value, process_name)
                 }
@@ -406,7 +406,7 @@ define(["dojo/_base/declare",
           var node = dijit.byId(node_id)
 
           if (!node && node_id == 'platform') {
-            var node = dijit.byId('platform_base')
+            var node = dijit.byId('baseline_platform')
           }
 
           if (node) {
