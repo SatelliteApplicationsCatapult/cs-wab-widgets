@@ -71,7 +71,8 @@ define(["dojo/_base/declare",
             domConstruct.create("label", {
               innerHTML: arg.display_name,
               for: arg.name,
-              title: arg.description
+              title: arg.description,
+              class:'form_label',
             }, div);
             domConstruct.place(this._createElementByType(arg).domNode, div);
             domConstruct.place(div, this.odcForm.domNode);
@@ -216,6 +217,7 @@ define(["dojo/_base/declare",
             name: arg.name,
             message: arg.description,
             required: true,
+            tooltipPosition: ["above","after","before"],
             constraints: {
               datePattern: datePattern,
               max: new Date().toISOString().split('T')[0]
@@ -234,7 +236,8 @@ define(["dojo/_base/declare",
             return new ValidationTextBox({
               name: arg.name,
               required: true,
-              id: arg.name
+              id: arg.name,
+              tooltipPosition: ["above","after","before"]
             });
           } else {
             // if valid_values list is not empty
@@ -327,11 +330,11 @@ define(["dojo/_base/declare",
             regExp: "POLYGON\\s*\\(\\(((-?\\d+\\.\\d+ -?\\d+\\.\\d+),?\\s*)+\\)\\)+",
             invalidMessage: 'Introduce a valid WKT string or use Select AOI tool',
             id: arg.name,
+            tooltipPosition: ["above","after","before"],
             onChange: dojo.hitch(this, function (value) {
               if (this._validatePolygon(value)) {
                 this._drawInputPolygon(value)
               }
-
             })
           });
 
@@ -600,6 +603,11 @@ define(["dojo/_base/declare",
       },
 
       _addAoiSelectorTools: function(domNode) {
+        domConstruct.create("label", {
+            innerHTML: this.params.display_name,
+            class:'form_title',
+          }, domNode);
+          
         domNode.appendChild(new Button({
           label: "Select AOI",
           onClick: lang.hitch(this, this.selectAoi)
@@ -714,7 +722,10 @@ define(["dojo/_base/declare",
       clearAoi: function() {
         this.map.graphics.clear();
         this._aoiGraphic = null;
-        this.wktArea.set('value', "");
+        if (this.wktArea) {
+          this.wktArea.set('value', "");
+        }
+        
       }
 
     });

@@ -8,10 +8,11 @@ define(["dojo/_base/declare",
     'dojo/Evented',
     "dojo/text!./ProductCard.html",
     "./util",
-    "./RequestForm"
+    "./RequestForm",
+    "dijit/Tooltip",
   ],
   function(declare, array, locale, domClass, _WidgetBase, _TemplatedMixin,
-           Evented, _WidgetsInTemplateMixin, template, util, RequestForm) {
+           Evented, _WidgetsInTemplateMixin, template, util, RequestForm, Tooltip) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
 
@@ -78,7 +79,18 @@ define(["dojo/_base/declare",
         util.setNodeTitle (this.titleNode, this.display_name);
 
         util.setNodeText(this.descriptionNode, this.description);
-        util.setNodeTitle(this.descriptionNode, this.description);
+        //util.setNodeTitle(this.descriptionNode, this.description);
+
+        this.descriptionNode.id = this.display_name
+        this._setTooltip()
+      },
+
+      _setTooltip: function() {
+        var e = new Tooltip({
+            connectId: [this.descriptionNode],
+            label: this.description,
+            position: ["above"]
+        });
       },
 
       _renderThumbnail: function() {
@@ -86,6 +98,7 @@ define(["dojo/_base/declare",
         nd.innerHTML = "";
         var thumbnail = document.createElement("IMG");
         if (this.thumbnail) {
+          thumbnail.classList.add('cardThumbnail')
           thumbnail.src = this.thumbnail
         } else {
           thumbnail.src = "widgets/ODCRequest/images/placeholder_120x80.png";
