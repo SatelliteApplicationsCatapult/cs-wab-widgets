@@ -1,3 +1,5 @@
+var date_objects = []
+
 define(["dojo/_base/declare",
     "dojo/date/locale",
     "dijit/_WidgetBase",
@@ -52,6 +54,8 @@ define(["dojo/_base/declare",
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
+
+        date_objects = []
 
         try {
           for (var _iterator = this.args[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
@@ -208,13 +212,71 @@ define(["dojo/_base/declare",
         alert_dialog.show()
       },
 
+      checkDatePosition: function () {
+        const date_pairs = {
+          'time_start': 'time_end',
+          'analysis_time_start': 'analysis_time_end',
+          'baseline_time_start': 'baseline_time_end'
+        }
+
+        date_objects.forEach(function (e) {
+          let id = e.id
+          if (id in date_pairs) {
+            let start_result = e.displayedValue
+            let end_date = date_objects.filter(date => date.id === date_pairs[id])
+            let end_result = end_date[0].displayedValue
+            if (start_result && end_result) {
+              if (start_result > end_result) {
+                end_date[0].setValue(start_result)
+              }
+            }
+          }
+        })
+      },
+
+      checkYearPosition: function(e) {
+        if (e > 1000) {
+          this.value = 292
+          this.displayedValue = 292
+          this._resetValue()
+        }
+      },
+
       _createElementByType: function(arg) {
         var process_name = this.name
+
+        if (arg.type === "year") {
+            const year = new Date().getFullYear()
+            let constraints = {
+              min: "1975",
+              max: year,
+              places: 0,
+              pattern: '#'
+            };
+
+            return new NumberSpinner({
+              name: arg.name,
+              required: true,
+              value: year,
+              onChange: this.checkYearPosition, 
+              constraints: {
+                min: 1975,
+                max: year,
+                places: 0,
+                pattern: '#'
+              },
+              smallDelta: 1,
+              id: arg.name,
+            });
+        }
+
         if (arg.type === "date") {
+            
           var datePattern = 'yyyy-MM-dd';
           var datebox = new DateTextBox({
             id: arg.name,
             name: arg.name,
+            onChange: this.checkDatePosition,
             message: arg.description,
             required: true,
             tooltipPosition: ["above","after","before"],
@@ -229,6 +291,8 @@ define(["dojo/_base/declare",
               });
             },
           });
+
+          date_objects.push(datebox)
           return datebox;
 
         } else if (arg.type === "str") {
