@@ -213,14 +213,13 @@ define(["dojo/_base/declare",
       },
 
       checkDatePosition: function () {
-        let parent = this.getParent().getParent();
         const date_pairs = {
           'time_start': 'time_end',
           'analysis_time_start': 'analysis_time_end',
           'baseline_time_start': 'baseline_time_end'
         };
 
-        let date_objects = parent.date_objects
+        let date_objects = this.dateObjects
         date_objects.forEach(function (e) {
           let id = e.id;
           if (id in date_pairs) {
@@ -279,6 +278,7 @@ define(["dojo/_base/declare",
             name: arg.name,
             onChange: this.checkDatePosition,
             message: arg.description,
+            dateObjects: this.date_objects,
             required: true,
             tooltipPosition: ["above","after","before"],
             constraints: {
