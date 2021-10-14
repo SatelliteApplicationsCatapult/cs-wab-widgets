@@ -40,6 +40,8 @@ define(["dojo/_base/declare",
       _aoiGraphic: null,
       _drawAoi: null,
 
+      date_objects : [],
+
       postCreate: function() {
         this.inherited(arguments);
         this._createInputFields();
@@ -53,15 +55,17 @@ define(["dojo/_base/declare",
         var _didIteratorError = false;
         var _iteratorError = undefined;
 
+        this.date_objects.length = 0
+
         try {
           for (var _iterator = this.args[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var arg = _step.value;
 
             // Multi selector is not given enough height by default
             if (arg.type == 'multi') {
-              class_list = 'form-input multi'
+              class_list = 'form-input multi';
             } else {
-              class_list = 'form-input'
+              class_list = 'form-input';
             }
             // Create label for given input
             var div = domConstruct.create("div", {
@@ -92,7 +96,7 @@ define(["dojo/_base/declare",
           }
         }
 
-        this._initialiseDynamicForm()
+        this._initialiseDynamicForm();
 
         var submitButton = new Button({
           label: 'Submit Form',
@@ -118,7 +122,7 @@ define(["dojo/_base/declare",
       },
 
       sendValues: function(values){
-        active_alerts = document.getElementsByClassName('alert_box')
+        active_alerts = document.getElementsByClassName('alert_box');
         while (active_alerts.length > 0) {
           active_alerts[0].parentNode.removeChild(active_alerts[0]);
         }
@@ -145,22 +149,22 @@ define(["dojo/_base/declare",
               _this._createSuccessfulMessage(data);
             }).catch(function (error) {
               _this._createErrorMessage(error);
-            })
+            });
           } else {
             return response.text().then(function (data) {
               var error = JSON.parse(data);
-              full_error_message = ''
+              full_error_message = '';
 
               error.forEach(function (e) {
-                full_error_message = full_error_message + e.Error + '<br><br>'
+                full_error_message = full_error_message + e.Error + '<br><br>';
                 _this._addAlertBox(e.Error);
               });
 
-              _this._createErrorAlert(full_error_message)
+              _this._createErrorAlert(full_error_message);
 
-            })
+            });
           }
-        })
+        });
 
 
         // Unlock Submit tab selection after selecting product
@@ -173,9 +177,9 @@ define(["dojo/_base/declare",
         // Select the Submit tab panel automatically
         this.tabContainer.selectTab('Submit');
 
-        let success_message = dijit.byId('success_message')
+        let success_message = dijit.byId('success_message');
         if (success_message) {
-          success_message.destroy()
+          success_message.destroy();
         }
 
         this.submitTemplate = new Submit({
@@ -205,17 +209,59 @@ define(["dojo/_base/declare",
           content: error,
           style: "width: 400px"
         });
-        alert_dialog.show()
+        alert_dialog.show();
+      },
+
+      checkDatePosition: function () {
+        const date_pairs = {
+          'time_start': 'time_end',
+          'analysis_time_start': 'analysis_time_end',
+          'baseline_time_start': 'baseline_time_end'
+        };
+
+        let date_objects = this.dateObjects
+        date_objects.forEach(function (e) {
+          let id = e.id;
+          if (id in date_pairs) {
+            let start_result = e.displayedValue;
+            let end_date = date_objects.filter(date => date.id === date_pairs[id]);
+            let end_result = end_date[0].displayedValue;
+            if (start_result && end_result) {
+              if (start_result > end_result) {
+                end_date[0].setValue(start_result);
+              }
+            }
+          }
+        });
       },
 
       _createElementByType: function(arg) {
-        var process_name = this.name
+        var process_name = this.name;
+
+        if (arg.type === "year") {
+            const year = new Date().getFullYear();
+            return new NumberSpinner({
+              name: arg.name,
+              required: true,
+              value: year,
+              constraints: {
+                min: 1975,
+                max: year,
+                places: 0,
+                pattern: '#'
+              },
+              smallDelta: 1,
+              id: arg.name,
+            });
+        }
         if (arg.type === "date") {
           var datePattern = 'yyyy-MM-dd';
           var datebox = new DateTextBox({
             id: arg.name,
             name: arg.name,
+            onChange: this.checkDatePosition,
             message: arg.description,
+            dateObjects: this.date_objects,
             required: true,
             tooltipPosition: ["above","after","before"],
             constraints: {
@@ -229,6 +275,9 @@ define(["dojo/_base/declare",
               });
             },
           });
+
+          this.date_objects.push(datebox);
+
           return datebox;
 
         } else if (arg.type === "str") {
@@ -244,20 +293,20 @@ define(["dojo/_base/declare",
             // creates a dropdown list with the
             // values given in it.
             var options = [];
-            var set_date_boundaries = this._setDateBoundaries
-            var set_int_boundaries = this._setIntBoundaries
+            var set_date_boundaries = this._setDateBoundaries;
+            var set_int_boundaries = this._setIntBoundaries;
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
 
             try {
               for (var _iterator2 = arg.valid_values[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var _value = _step2.value
-                var _display = _step2.value
+                var _value = _step2.value;
+                var _display = _step2.value;
 
                 if (typeof _value == 'object') {
-                  _display = _value.display
-                  _value = _value.value
+                  _display = _value.display;
+                  _value = _value.value;
                 }
 
                 options.push({
@@ -289,16 +338,16 @@ define(["dojo/_base/declare",
               },
               onChange: function (value) {
                 if (arg.name == 'platform' || arg.name == 'baseline_platform') {
-                  set_int_boundaries('platform', value, process_name)
-                  set_date_boundaries('platform', value, process_name)
+                  set_int_boundaries('platform', value, process_name);
+                  set_date_boundaries('platform', value, process_name);
                 }
               },
               id: arg.name
             });
 
-            value = select_dom.value
+            value = select_dom.value;
 
-            return select_dom
+            return select_dom;
           }
         } else if (arg.type === "int") {
           var constraints = {};
@@ -333,7 +382,7 @@ define(["dojo/_base/declare",
             tooltipPosition: ["above","after","before"],
             onChange: dojo.hitch(this, function (value) {
               if (this._validatePolygon(value)) {
-                this._drawInputPolygon(value)
+                this._drawInputPolygon(value);
               }
             })
           });
@@ -341,20 +390,20 @@ define(["dojo/_base/declare",
           return this.wktArea;
 
         } else if (arg.type === "multi") {
-          var multi_select_element = document.createElement('select')
+          var multi_select_element = document.createElement('select');
           for (var _iterator2 = arg.valid_values[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _value = _step2.value
-            var _display = _step2.value
+            var _value = _step2.value;
+            var _display = _step2.value;
 
             if (typeof _value == 'object') {
-              _display = _value.display
-              _value = _value.value
+              _display = _value.display;
+              _value = _value.value;
             }
 
-            var option_element = document.createElement('option')
-            option_element.innerHTML = _display
-            option_element.value = _value
-            multi_select_element.appendChild(option_element)
+            var option_element = document.createElement('option');
+            option_element.innerHTML = _display;
+            option_element.value = _value;
+            multi_select_element.appendChild(option_element);
           }
           return new MultiSelect({
             name: arg.name,
@@ -364,11 +413,11 @@ define(["dojo/_base/declare",
             id: arg.name,
             onChange: dojo.hitch(this, function (values) {
                 if (arg.name=='platform') {
-                    this._setMultiIntBoundaries(arg.name, values)
-                    this._setMultiDateBoundaries(arg.name, values)
+                    this._setMultiIntBoundaries(arg.name, values);
+                    this._setMultiDateBoundaries(arg.name, values);
                 }
             })
-          }, multi_select_element)
+          }, multi_select_element);
 
         } else if (arg.type === 'float') {
 
@@ -395,28 +444,28 @@ define(["dojo/_base/declare",
       },
 
       _initialiseDynamicForm: function() {
-        var set_date_boundaries = this._setDateBoundaries
-        var set_int_boundaries = this._setIntBoundaries
-        var set_multi_boundaries = this._setMultiIntBoundaries
+        var set_date_boundaries = this._setDateBoundaries;
+        var set_int_boundaries = this._setIntBoundaries;
+        var set_multi_boundaries = this._setMultiIntBoundaries;
 
-        var process_name = this.name
+        var process_name = this.name;
 
         Object.keys(dynamic_settings).forEach(function (node_id) {
 
-          var node = dijit.byId(node_id)
+          var node = dijit.byId(node_id);
 
           if (!node && node_id == 'platform') {
-            var node = dijit.byId('baseline_platform')
+            var node = dijit.byId('baseline_platform');
           }
 
           if (node) {
-            value = node.get("value")
+            value = node.get("value");
 
             if (!(Array.isArray(node.value))) {
-              set_int_boundaries(node_id, value, process_name)
-              set_date_boundaries(node_id, value, process_name)
+              set_int_boundaries(node_id, value, process_name);
+              set_date_boundaries(node_id, value, process_name);
             } else {
-              set_multi_boundaries(node_id, value, process_name)
+              set_multi_boundaries(node_id, value, process_name);
             }
           }
         });
@@ -424,9 +473,9 @@ define(["dojo/_base/declare",
       },
 
       _setDateBoundaries: function(node_id, selected_option, process_name) {
-        today = new Date().toISOString().split('T')[0]
+        today = new Date().toISOString().split('T')[0];
 
-        let key = dynamic_settings[node_id]
+        let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
             if (condition.type == 'date_range' && e.name == selected_option) {
@@ -438,17 +487,17 @@ define(["dojo/_base/declare",
                   }
                 }
 
-                let date_node = dijit.byId(condition.id[i])
+                let date_node = dijit.byId(condition.id[i]);
                 if (date_node) {
-                  let values = condition.value
-                  let constraints = date_node.attr("constraints")
-                  constraints.min = values[0]
+                  let values = condition.value;
+                  let constraints = date_node.attr("constraints");
+                  constraints.min = values[0];
                   if (values.length > 1) {
-                    constraints.max = values[1]
+                    constraints.max = values[1];
                   } else {
-                    constraints.max = today
+                    constraints.max = today;
                   }
-                  date_node.attr("constraints", constraints)
+                  date_node.attr("constraints", constraints);
                   
                   /*
                   if (date_node.value != null) {
@@ -459,13 +508,13 @@ define(["dojo/_base/declare",
                 }
               }
             }
-          })
-        })
+          });
+        });
       },
 
       // Need to set default int boundaries
       _setIntBoundaries: function(node_id, selected_option, process_name) {
-        let key = dynamic_settings[node_id]
+        let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
             if (condition.type == 'int_range' && e.name == selected_option) {
@@ -477,129 +526,129 @@ define(["dojo/_base/declare",
                   }
                 }
 
-                let int_node = dijit.byId(condition.id[i])
+                let int_node = dijit.byId(condition.id[i]);
                 if (int_node) {
-                  let values = condition.value
-                  let constraints = int_node.attr("constraints")
-                  constraints.min = Math.min(...values)
+                  let values = condition.value;
+                  let constraints = int_node.attr("constraints");
+                  constraints.min = Math.min(...values);
                   if (values.length > 1) {
-                    constraints.max = Math.max(...values)
+                    constraints.max = Math.max(...values);
                   } else {
-                    constraints.max = ''
+                    constraints.max = '';
                   }
 
-                  int_node.attr("constraints", constraints)
-                  int_node.attr("value", Math.min(...values))
+                  int_node.attr("constraints", constraints);
+                  int_node.attr("value", Math.min(...values));
                 }
               }
             }
-          })
-        })
+          });
+        });
       },
 
       _setMultiIntBoundaries: function(node_id, values) {
-        var min_value = 0
-        var max_value = 0
-        int_node = false
+        var min_value = 0;
+        var max_value = 0;
+        int_node = false;
 
-        let key = dynamic_settings[node_id]
+        let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
             if (condition.type == 'int_range' && values.includes(e.name)) {
               for (var i = 0; i < condition.id.length; i++) {
-                int_node = dijit.byId(condition.id[i])
+                int_node = dijit.byId(condition.id[i]);
 
                 if (condition.hasOwnProperty("processes")) {
                   if (condition.processes.includes(this.name)) {} else {
                     break;
                   }
                 }
-                let values = condition.value
-                min_value_temp = Math.min(...values)
-                max_value_temp = Math.max(...values)
+                let values = condition.value;
+                min_value_temp = Math.min(...values);
+                max_value_temp = Math.max(...values);
 
                 if (min_value_temp > min_value) {
-                  min_value = min_value_temp
+                  min_value = min_value_temp;
                 }
 
                 if (max_value_temp > max_value) {
-                  max_value = max_value_temp
+                  max_value = max_value_temp;
                 }
                 
               }
               if (int_node) {
-                let constraints = int_node.attr("constraints")
-                constraints.min = min_value
+                let constraints = int_node.attr("constraints");
+                constraints.min = min_value;
                 if (values.length > 1) {
-                  constraints.max = max_value
+                  constraints.max = max_value;
                 } else {
-                  constraints.max = ''
+                  constraints.max = '';
                 }
-                int_node.attr("constraints", constraints)
-                int_node.attr("value", min_value)
+                int_node.attr("constraints", constraints);
+                int_node.attr("value", min_value);
               }
               
             }
-          })
-        })
+          });
+        });
       },
 
       _setMultiDateBoundaries: function(node_id, values) {
-        today = new Date().toISOString().split('T')[0]
+        today = new Date().toISOString().split('T')[0];
 
-        var min_value = new Date('1990-01-01').toISOString().split('T')[0]
-        var max_value = today
-        date_nodes = []
+        var min_value = new Date('1990-01-01').toISOString().split('T')[0];
+        var max_value = today;
+        date_nodes = [];
 
-        let key = dynamic_settings[node_id]
+        let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
             if (condition.type == 'date_range' && values.includes(e.name)) {
               for (var i = 0; i < condition.id.length; i++) {
-                date_node_temp = dijit.byId(condition.id[i])
+                date_node_temp = dijit.byId(condition.id[i]);
                 if (date_node_temp) {
-                  date_nodes.push(date_node_temp)
+                  date_nodes.push(date_node_temp);
                 }
                 if (condition.hasOwnProperty("processes")) {
                   if (condition.processes.includes(this.name)) {} else {
                     break;
                   }
                 }
-                let values = condition.value
+                let values = condition.value;
                 
                 if (date_node_temp) {
-                  min_value_temp = new Date(values[0]).toISOString().split('T')[0]
+                  min_value_temp = new Date(values[0]).toISOString().split('T')[0];
                   if (values.length > 1) {
-                    max_value_temp = new Date(values[1]).toISOString().split('T')[0]
+                    max_value_temp = new Date(values[1]).toISOString().split('T')[0];
                   } else {
-                    max_value_temp = ''
+                    max_value_temp = '';
                   }                  
                   if (min_value_temp > min_value) {
-                    min_value = min_value_temp
+                    min_value = min_value_temp;
                   }
                   if (max_value_temp) {
                     if (max_value_temp < max_value) {
-                      max_value = max_value_temp
+                      max_value = max_value_temp;
                     }
                   }
                 }
               }
               if (date_nodes) {
                 for (var i=0; i<date_nodes.length;i++) {
-                  let constraints = date_nodes[i].attr("constraints")
-                  constraints.min = min_value
+                  let constraints = date_nodes[i].attr("constraints");
+                  constraints.min = min_value;
                   if (max_value) {
-                    constraints.max = max_value
+                    constraints.max = max_value;
                   } else {
-                    constraints.max = ''
+                    constraints.max = '';
                   }
-                  date_nodes[i].attr("constraints", constraints)
+                  date_nodes[i].attr("constraints", constraints);
                   //date_nodes[i].attr("value", min_value)
                 }
               }
             }
-          })
-        })
+          });
+        });
       },
 
       _addAoiSelectorTools: function(domNode) {
@@ -622,24 +671,24 @@ define(["dojo/_base/declare",
       _addAlertBox: function(message) {
         var alert_box = document.getElementById("alert_box");
         if (!alert_box) {
-          message = '<h3>Request could not be processed</h3><br>' + message
+          message = '<h3>Request could not be processed</h3><br>' + message;
         }
         var div = domConstruct.create("div", {
           id: 'alert_box',
           class: 'alert_box',
           style: 'width: 100%;text-align: center;background-color: #fff1df;padding: 0.7em;'
-        })
+        });
         domConstruct.create("label", {
           innerHTML: message,
           title: 'Alert'
-        }, div)
-        domConstruct.place(div, this.odcForm.domNode)
+        }, div);
+        domConstruct.place(div, this.odcForm.domNode);
       },
 
       _drawInputPolygon: function(wkt) {
         this.map.graphics.clear();
         this._aoiGraphic = null;
-        let rings = this._wktToEsriGeometry(wkt)
+        let rings = this._wktToEsriGeometry(wkt);
         var aoiGraphic = {
           "geometry": {
             "rings": [
@@ -662,14 +711,14 @@ define(["dojo/_base/declare",
           }
         };
         this._aoiGraphic = new Graphic(aoiGraphic);
-        this.map.graphics.add(this._aoiGraphic)
+        this.map.graphics.add(this._aoiGraphic);
       },
 
       _validatePolygon: function(polygon) {
         if (polygon.length > 10) {
-          return true
+          return true;
         }
-        return false
+        return false;
       },
 
       selectAoi: function() {
@@ -701,22 +750,21 @@ define(["dojo/_base/declare",
         }
       },
 
-      // TODO: This is so hacky, I need to find a better way of doing this ... regular expression
       _wktToEsriGeometry: function(wkt) {
-        wkt = wkt.replace('POLYGON', '')
-        wkt = wkt.replace('((', '')
-        wkt = wkt.replace('))', '')
+        wkt = wkt.replace('POLYGON', '');
+        wkt = wkt.replace('((', '');
+        wkt = wkt.replace('))', '');
         wkt = wkt.split(',');
-        output = []
+        output = [];
         wkt.forEach(function (e) {
-          ring = []
-          e = e.split(' ')
+          ring = [];
+          e = e.split(' ');
           e.forEach(function (i) {
-            ring.push(parseFloat(i))
-          })
-          output.push(ring)
-        })
-        return output
+            ring.push(parseFloat(i));
+          });
+          output.push(ring);
+        });
+        return output;
       },
 
       clearAoi: function() {
