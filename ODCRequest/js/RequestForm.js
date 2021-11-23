@@ -238,6 +238,8 @@ define(["dojo/_base/declare",
       _createElementByType: function(arg) {
         var process_name = this.name;
 
+        console.log('Arg ::', arg)
+
         if (arg.type === "year") {
             const year = new Date().getFullYear();
             return new NumberSpinner({
@@ -254,16 +256,18 @@ define(["dojo/_base/declare",
               id: arg.name,
             });
         }
-        if (arg.type === "date") {
+        else if (arg.type === "date") {
           var datePattern = 'yyyy-MM-dd';
+
           var datebox = new DateTextBox({
             id: arg.name,
             name: arg.name,
             onChange: this.checkDatePosition,
             message: arg.description,
+            value: arg.default,
             dateObjects: this.date_objects,
             required: true,
-            tooltipPosition: ["above","after","before"],
+            tooltipPosition: ["after","before"],
             constraints: {
               datePattern: datePattern,
               max: new Date().toISOString().split('T')[0]
@@ -329,10 +333,12 @@ define(["dojo/_base/declare",
                 }
               }
             }
+
             select_dom = new Select({
               name: arg.name,
               required: true,
               options: options,
+              value: arg.default,
               style: {
                 width: '17.3em'
               },
@@ -349,9 +355,10 @@ define(["dojo/_base/declare",
 
             return select_dom;
           }
-        } else if (arg.type === "int") {
+        } else if (arg.type === "int") {          
           var constraints = {};
-          var value = 0;
+          var value = arg.default ? arg.default : 0;
+
 
           if (arg.valid_values.length !== 0) {
             constraints = {
@@ -367,6 +374,7 @@ define(["dojo/_base/declare",
             name: arg.name,
             required: true,
             value: value,
+            defaultValue: value,
             constraints: constraints,
             smallDelta: 1,
             id: arg.name,
@@ -405,12 +413,14 @@ define(["dojo/_base/declare",
             option_element.value = _value;
             multi_select_element.appendChild(option_element);
           }
-          return new MultiSelect({
+
+          let multi = new MultiSelect({
             name: arg.name,
             style: {
               width: '210px'
             },
             id: arg.name,
+            value: [arg.default],
             onChange: dojo.hitch(this, function (values) {
                 if (arg.name=='platform') {
                     this._setMultiIntBoundaries(arg.name, values);
@@ -418,6 +428,11 @@ define(["dojo/_base/declare",
                 }
             })
           }, multi_select_element);
+
+          //multi.setValue([arg.default])
+          console.log(multi.getValue());
+
+          return multi;
 
         } else if (arg.type === 'float') {
 
@@ -436,6 +451,7 @@ define(["dojo/_base/declare",
           return new NumberTextBox({
             name: arg.name,
             required: true,
+            value: arg.default,
             constraints: constraints,
             id: arg.name,
           });
@@ -474,7 +490,6 @@ define(["dojo/_base/declare",
 
       _setDateBoundaries: function(node_id, selected_option, process_name) {
         today = new Date().toISOString().split('T')[0];
-
         let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
@@ -538,7 +553,7 @@ define(["dojo/_base/declare",
                   }
 
                   int_node.attr("constraints", constraints);
-                  int_node.attr("value", Math.min(...values));
+                  if (!int_node.value) int_node.attr("value", Math.min(...values));
                 }
               }
             }
