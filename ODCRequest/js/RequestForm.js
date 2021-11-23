@@ -238,8 +238,6 @@ define(["dojo/_base/declare",
       _createElementByType: function(arg) {
         var process_name = this.name;
 
-        console.log('Arg ::', arg)
-
         if (arg.type === "year") {
             const year = new Date().getFullYear();
             return new NumberSpinner({
@@ -258,7 +256,6 @@ define(["dojo/_base/declare",
         }
         else if (arg.type === "date") {
           var datePattern = 'yyyy-MM-dd';
-
           var datebox = new DateTextBox({
             id: arg.name,
             name: arg.name,
@@ -333,7 +330,6 @@ define(["dojo/_base/declare",
                 }
               }
             }
-
             select_dom = new Select({
               name: arg.name,
               required: true,
@@ -355,7 +351,7 @@ define(["dojo/_base/declare",
 
             return select_dom;
           }
-        } else if (arg.type === "int") {          
+        } else if (arg.type === "int") {
           var constraints = {};
           var value = arg.default ? arg.default : 0;
 
@@ -414,7 +410,7 @@ define(["dojo/_base/declare",
             multi_select_element.appendChild(option_element);
           }
 
-          let multi = new MultiSelect({
+          return new MultiSelect({
             name: arg.name,
             style: {
               width: '210px'
@@ -428,11 +424,6 @@ define(["dojo/_base/declare",
                 }
             })
           }, multi_select_element);
-
-          //multi.setValue([arg.default])
-          console.log(multi.getValue());
-
-          return multi;
 
         } else if (arg.type === 'float') {
 
@@ -490,6 +481,7 @@ define(["dojo/_base/declare",
 
       _setDateBoundaries: function(node_id, selected_option, process_name) {
         today = new Date().toISOString().split('T')[0];
+        
         let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
