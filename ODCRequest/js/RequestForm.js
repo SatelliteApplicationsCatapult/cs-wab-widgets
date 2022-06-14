@@ -235,15 +235,31 @@ define(["dojo/_base/declare",
         });
       },
 
+      checkYearPosition: function(e) {
+        if (e > 1000) {
+          this.value = 292;
+          this.displayedValue = 292;
+          this._resetValue();
+        }
+      },
+
       _createElementByType: function(arg) {
         var process_name = this.name;
 
         if (arg.type === "year") {
             const year = new Date().getFullYear();
+            let constraints = {
+              min: "1975",
+              max: year,
+              places: 0,
+              pattern: '#'
+            };
+
             return new NumberSpinner({
               name: arg.name,
               required: true,
               value: year,
+              onChange: this.checkYearPosition, 
               constraints: {
                 min: 1975,
                 max: year,
@@ -254,14 +270,14 @@ define(["dojo/_base/declare",
               id: arg.name,
             });
         }
-        else if (arg.type === "date") {
+
+        if (arg.type === "date") {
           var datePattern = 'yyyy-MM-dd';
           var datebox = new DateTextBox({
             id: arg.name,
             name: arg.name,
             onChange: this.checkDatePosition,
             message: arg.description,
-            value: arg.default,
             dateObjects: this.date_objects,
             required: true,
             tooltipPosition: ["after","before"],
@@ -481,7 +497,6 @@ define(["dojo/_base/declare",
 
       _setDateBoundaries: function(node_id, selected_option, process_name) {
         today = new Date().toISOString().split('T')[0];
-        
         let key = dynamic_settings[node_id];
         key.forEach(function (e) {
           e.conditions.forEach(function (condition) {
@@ -545,7 +560,7 @@ define(["dojo/_base/declare",
                   }
 
                   int_node.attr("constraints", constraints);
-                  if (!int_node.value) int_node.attr("value", Math.min(...values));
+                  int_node.attr("value", Math.min(...values));
                 }
               }
             }
