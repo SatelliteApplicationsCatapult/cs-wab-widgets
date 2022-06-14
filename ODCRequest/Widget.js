@@ -75,6 +75,8 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
         onClick: lang.hitch(this, this.newRequestSubmit)
       });
 
+      this.apiToken = null;
+
       newRequestButton.placeAt(this.submitPane);
 
       this.createSelectProductPane();
@@ -84,90 +86,134 @@ function(declare, BaseWidget, lang, parser, on, BorderContainer, TabContainer, C
       console.log('ODCRequest::onOpen');
     },
 
-    createSelectProductPane: function() {
-      var _this = this;
+    requestToken: async function() {
+      let BASE_OPENPORTAL_URL = new URL(this.config.openportalUrl);
+      let REQUEST_TOKEN_URL = BASE_OPENPORTAL_URL.origin + BASE_OPENPORTAL_URL.pathname + "request-token";
 
-      var token_url = new URL(this.config.cubequeryUrl + '/token');
-
-      fetch(token_url, {
+      let token = await fetch(REQUEST_TOKEN_URL, {
         method: 'POST',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: this.config.cubequeryName,
-          pass: this.config.cubequeryPass
+          user: this.config.openportalName,
+          pass: this.config.openportalPass
+        })
+      })
+      .then(function (response) {
+        return response.json();
+      }
+      ).then(function (data) {
+        return data.token;
+      }
+      ).catch(function (error) {
+        console.log(error);
+      }
+      );
+      return token;
+    },
+
+    refreshToken: async function() {
+      let BASE_OPENPORTAL_URL = new URL(this.config.openportalUrl);
+      let REFRESH_TOKEN_URL = BASE_OPENPORTAL_URL.origin + BASE_OPENPORTAL_URL.pathname + "refresh-token";
+      
+      let refreshedToken = await fetch(REFRESH_TOKEN_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: this.apiToken
+        })
+      })
+      .then(function (response) {
+        return response.json();
+      }
+      ).then(function (data) {
+        return data.token;
+      }
+      ).catch(function (error) {
+        console.log(error);
+      }
+      );
+
+      return refreshedToken;
+    },
+
+    createSelectProductPane: async function() {
+      var _this = this;
+      let BASE_OPENPORTAL_URL = new URL(this.config.openportalUrl);
+
+      let PRODUCT_ENDPOINT = BASE_OPENPORTAL_URL.origin + BASE_OPENPORTAL_URL.pathname + "fetch-products";
+
+      this.apiToken = await _this.requestToken();
+
+      // Refresh token every 5 minutes
+      setInterval(async function() {
+        let token = await _this.refreshToken(this.apiToken);
+        this.apiToken = token;
+      }
+      , 300000);
+
+      fetch(PRODUCT_ENDPOINT, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: this.apiToken,
         })
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-          _this.apiToken = data.token;
-          var describe_url = new URL(_this.config.cubequeryUrl + '/describe');
-          describe_url.searchParams.append('APP_KEY', _this.apiToken);
-  
-          fetch(describe_url, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json'
+        dynamic_settings = data.settings
+        result = data.result              
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+
+          for (var _iterator = result[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var product = _step.value;
+            var productCard = new ProductCard({
+              name: product.name,
+              display_name: product.display_name,
+              description: product.description,
+              args: product.args,
+              formPane: _this.formPane,
+              map: _this.map,
+              tabContainer: _this.tabContainer,
+              config: _this.config,
+              apiToken: _this.apiToken,
+              infoLink: product.info_url,
+              thumbnail: product.img_url,
+              dynamic_settings: dynamic_settings,
+            });
+
+            productCard.placeAt(_this.selectPane);
+            productCard.on('on-product-selected', lang.hitch(_this, _this._productSelectedOnChanged));
+
+            _this.productCardList.push(productCard);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
             }
-          }).then(function (response) {
-            return response.json();
-          }).then(function (data) {
-            dynamic_settings = data.settings
-            result = data.result              
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-
-              for (var _iterator = result[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var product = _step.value;
-                var productCard = new ProductCard({
-                  name: product.name,
-                  display_name: product.display_name,
-                  description: product.description,
-                  args: product.args,
-                  formPane: _this.formPane,
-                  map: _this.map,
-                  tabContainer: _this.tabContainer,
-                  config: _this.config,
-                  apiToken: _this.apiToken,
-                  infoLink: product.info_url,
-                  thumbnail: product.img_url,
-                  dynamic_settings: dynamic_settings,
-                });
-
-                productCard.placeAt(_this.selectPane);
-                productCard.on('on-product-selected', lang.hitch(_this, _this._productSelectedOnChanged));
-  
-                _this.productCardList.push(productCard);
-              }
-            } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
-                }
-              } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
-                }
-              }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
-          });
-        }).catch(function (error) {
-          _this.errorTemplate = new ErrorTemplate({
-            errorMessage: error,
-            tabContainer: _this.tabContainer
-          });
-  
-          _this.errorTemplate.placeAt(_this.selectPane);
-        });
+          }
+        }
+      });
         
     },
 

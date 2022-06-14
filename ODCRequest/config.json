@@ -1,5 +1,5 @@
 {
-  "cubequeryUrl": "http://localhost:5000",
-  "cubequeryName": "basic",
-  "cubequeryPass": "secretpassword"
+  "openportalUrl": "http://localhost:3434",
+  "openportalName": "",
+  "openportalPass": ""
 }
