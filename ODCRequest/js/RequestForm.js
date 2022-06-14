@@ -129,9 +129,7 @@ define(["dojo/_base/declare",
 
         var _this = this;
 
-        var task_url = new URL(this.config.cubequeryUrl + '/task');
-        task_url.searchParams.append('APP_KEY', this.apiToken);
-
+        var task_url = new URL(this.config.openportalUrl + '/submit-task');
         fetch(task_url, {
           method: 'POST',
           mode: 'cors',
@@ -141,7 +139,8 @@ define(["dojo/_base/declare",
           },
           body: JSON.stringify({
             task: this.name,
-            args: JSON.parse(values)
+            args: JSON.parse(values),
+            token: this.apiToken,
           })
         }).then(function (response) {
           if (response['status'] == 200) {
@@ -248,12 +247,6 @@ define(["dojo/_base/declare",
 
         if (arg.type === "year") {
             const year = new Date().getFullYear();
-            let constraints = {
-              min: "1975",
-              max: year,
-              places: 0,
-              pattern: '#'
-            };
 
             return new NumberSpinner({
               name: arg.name,
@@ -280,7 +273,7 @@ define(["dojo/_base/declare",
             message: arg.description,
             dateObjects: this.date_objects,
             required: true,
-            tooltipPosition: ["after","before"],
+            tooltipPosition: ["above","after","before"],
             constraints: {
               datePattern: datePattern,
               max: new Date().toISOString().split('T')[0]
@@ -350,7 +343,6 @@ define(["dojo/_base/declare",
               name: arg.name,
               required: true,
               options: options,
-              value: arg.default,
               style: {
                 width: '17.3em'
               },
@@ -369,8 +361,7 @@ define(["dojo/_base/declare",
           }
         } else if (arg.type === "int") {
           var constraints = {};
-          var value = arg.default ? arg.default : 0;
-
+          var value = 0;
 
           if (arg.valid_values.length !== 0) {
             constraints = {
@@ -386,7 +377,6 @@ define(["dojo/_base/declare",
             name: arg.name,
             required: true,
             value: value,
-            defaultValue: value,
             constraints: constraints,
             smallDelta: 1,
             id: arg.name,
@@ -432,7 +422,6 @@ define(["dojo/_base/declare",
               width: '210px'
             },
             id: arg.name,
-            value: [arg.default],
             onChange: dojo.hitch(this, function (values) {
                 if (arg.name=='platform') {
                     this._setMultiIntBoundaries(arg.name, values);
@@ -458,7 +447,6 @@ define(["dojo/_base/declare",
           return new NumberTextBox({
             name: arg.name,
             required: true,
-            value: arg.default,
             constraints: constraints,
             id: arg.name,
           });
