@@ -129,6 +129,10 @@ define(["dojo/_base/declare",
 
         var _this = this;
 
+        // Publish needs to be set to publish to the ESRI server
+        values = JSON.parse(values);
+        values['publish'] = true;
+
         var task_url = new URL(this.config.openportalUrl + '/submit-task');
         fetch(task_url, {
           method: 'POST',
@@ -139,7 +143,7 @@ define(["dojo/_base/declare",
           },
           body: JSON.stringify({
             task: this.name,
-            args: JSON.parse(values),
+            args: values,
             token: this.apiToken,
           })
         }).then(function (response) {
